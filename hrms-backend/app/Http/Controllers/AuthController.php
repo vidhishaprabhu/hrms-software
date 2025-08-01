@@ -4,45 +4,66 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-
+use Illuminate\Support\Facades\Validator;
 class AuthController extends Controller
 {
     public function register(Request $request){
-       $validated = $request->validate([
-        'name' => ['required', 'string', 'max:255'],
-        'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-        'password' => ['required', 'string', 'min:8', 'confirmed'],
-        ]);
-        $user=User::create([
-            'name'=>$validated['name'],
-            'email'=>$validated['email'],
-            'password'=>Hash::make($validated['password']),
-        ]);
-        Auth::login($user);
-        $request->session->regenerate();
-        return response()->json(['message' => 'User registered sucessfully']);
+        $validator = Validator::make($request->all(), [
+        'name' => 'required|string',
+        'email' => 'required|email',
+        'password' => 'required|min:6',
+    ]);
+
+    // 🔍 Check manually if email already exists (Equality Check)
+    $existingUser = User::where('email', $request->email)->first();
+    $existingName = User:: where('name', $request->name)->first();
+    $existingPassword = User::where('password',$request->password)->first();
+    if ($existingUser) {
+        return response()->json([
+            'errors' => ['email' => ['This email is already registered.']]
+        ], 422);
+    }
+    if($existingName){
+         return response()->json([
+            'errors' => ['name' => ['This name is already registered.']]
+        ], 422);       
+    }
+    $user=User::create([
+        'name'=>$request->name,
+        'email'=>$request->email,
+        'password'=>bcrypt($request->password),
+    ]);
+        
+        return response()->json(['message'=>'User registered successfully','user'=>$user]);
     }
     public function login(Request $request){
-        $credentials = $request->validate([
-            'email' => ['required', 'email'],
-            'password' => ['required'],
+        $request->validate([
+            'email' => 'required|string|email',
+            'password' => 'required|string|min:8',
         ]);
-        if(!Auth::attempt($credentials)){
-            return response()->json(['message'=>'Invalid Credentials'],401);
+        $user=User::where('email',$request->email)->first();
+        if(!$user || !Hash::check($request->password, $user->password)){
+            return response()->json(['error' => 'Invalid Credentials'], 401);
         }
-        $request->session()->regenerate();
-        return response()->json(['message'=>'User logged in successfully'],201);
+        $token = $user->createToken('api-token')->plainTextToken;
+        return response()->json([
+            'user'=>$user,
+            'token' => $token
+        ],200);
+    }
+    // AuthController.php
 
+public function logout(Request $request)
+{
+    $user = $request->user();
+
+    if ($user && $user->currentAccessToken()) {
+        $user->currentAccessToken()->delete();  // ✅ Deletes token from DB
+        return response()->json(['message' => 'Logged out successfully']);
     }
-    public function logout(Request $request){
-        Auth::guard('web')->logout();
-        $request->session()->invalidate();
-        $request->session()->regenerate();
-        return response()->json(['message'=>'User logout successfully']);
-    }
-    public function user(Request $request){
-        return $request->user();
-    }
+
+    return response()->json(['message' => 'No token to delete'], 401);
+}
+
 }
