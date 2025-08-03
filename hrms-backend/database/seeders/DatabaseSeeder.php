@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use Database\Seeders\LeaveSeeder;
 use Database\Seeders\EmployeeSeeder;
 
 class DatabaseSeeder extends Seeder
@@ -14,6 +15,9 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $this->call(EmployeeSeeder::class);
+        $this->call([
+        EmployeeSeeder::class,
+        LeaveSeeder::class, 
+    ]);
     }
 }

@@ -14,4 +14,15 @@ class EmployeeController extends Controller
             'total_employees' => $count
         ]);
     }
+    public function getNewJoineesThisMonth(){
+        $newJoinees = Employee::whereMonth('date_of_joining', now()->month)
+            ->whereYear('date_of_joining', now()->year)
+            ->count();
+            
+        return response()->json([
+            'new_joinees' => $newJoinees
+        ]);
+
+    }
+
 }

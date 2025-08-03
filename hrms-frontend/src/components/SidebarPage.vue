@@ -12,7 +12,7 @@
 
     <!-- Navigation -->
     <ul class="nav flex-column">
-      <p class="text-white fw-bold">NAVIGATION</p>
+      <a href=""><p class="text-white fw-bold">NAVIGATION</p></a>
       <li class="nav-item mb-3" v-for="item in navItems" :key="item.name">
         <router-link :to="item.route" class="nav-link text-white d-flex align-items-center sidebar-link">
           <!-- Use component dynamically -->
