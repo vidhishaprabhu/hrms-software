@@ -27,4 +27,5 @@ class LeaveController extends Controller
             'rejected_leaves' => $count
         ]);
     }
+     
 }

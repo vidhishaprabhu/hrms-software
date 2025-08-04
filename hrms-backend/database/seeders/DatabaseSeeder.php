@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Database\Seeders\LeaveSeeder;
 use Database\Seeders\EmployeeSeeder;
+use Database\Seeders\AttendanceSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -18,6 +19,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
         EmployeeSeeder::class,
         LeaveSeeder::class, 
+        AttendanceSeeder::class
     ]);
     }
 }

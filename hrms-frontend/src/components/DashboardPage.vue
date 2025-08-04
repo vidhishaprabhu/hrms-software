@@ -8,6 +8,7 @@
         <div class="card-body">
           <h5 class="card-title">Total Employees</h5>
           <p class="card-text fs-3">{{ totalEmployees }}</p>
+          <button class="btn btn-primary"><EyeOutlined/> View</button>
         </div>
       </div>
     </div>
@@ -19,6 +20,7 @@
         <div class="card-body">
           <h5 class="card-title">New Joinees</h5>
           <p class="card-text fs-3">{{ newJoinees }}</p>
+           <button class="btn btn-primary"><EyeOutlined/> View</button>
         </div>
       </div>
     </div>
@@ -28,12 +30,13 @@
         <div class="card-body">
           <h5 class="card-title">Employees on Leave</h5>
           <p class="card-text fs-3">{{ leaves }}</p>
+           <router-link to="/attendance"><button class="btn btn-primary"><EyeOutlined/> View</button></router-link>
         </div>
       </div>
     </div>
     <div class="col-md-5" style="width:20%">
       <div class="card text-white bg-info mb-3 zoom-card">
-        <div class="card-header">Approved Leave Dashboard</div>
+        <div class="card-header">Leave Approval Dashboard</div>
         <div class="card-body">
           <div class="d-flex justify-content-between align-items-center">
             <p class="card-title m-0">
@@ -47,11 +50,80 @@
               <span class="ms-2">{{ rejectLeaves }}</span>
             </p>
           </div>
+          <button class="btn btn-primary mt-4"><EyeOutlined/> View</button>
         </div>
 
       </div>
     </div>
   </div>
+   <h4 class="text-center" style="color:#0077B6;font-weight:600">Upcoming Holidays <CalendarOutlined/></h4>
+  <div class="d-flex justify-content-center">
+  <table class="table table-bordered text-center w-auto">
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Date</th>
+        <th>Description</th>
+        <th>Action1</th>
+        <th>Action2</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr v-for="holiday in holidays" :key="holiday.id">
+        <td>
+          <input
+            v-if="editId === holiday.id"
+            v-model="editHoliday.title"
+            class="form-control"
+          />
+          <span v-else>{{ holiday.title }}</span>
+        </td>
+        <td>
+          <input
+            v-if="editId === holiday.id"
+            v-model="editHoliday.holiday_date"
+            class="form-control"
+          />
+          <span v-else>{{ holiday.holiday_date }}</span>
+        </td>
+        <td>
+          <input
+            v-if="editId === holiday.id"
+            v-model="editHoliday.description"
+            class="form-control"
+          />
+          <span v-else>{{ holiday.description }}</span>
+        </td>
+        <td>
+          <button
+            v-if="editId === holiday.id"
+            class="btn" style="background-color:green;color:white"
+            @click="saveHoliday(holiday.id)"
+          >
+            <SaveOutlined />
+          </button>
+          <button
+            v-else
+            class="btn btn-primary"
+            @click="editHolidayRow(holiday)"
+          >
+            <EditOutlined /> 
+          </button>
+        </td>
+        <td>
+          <button
+            class="btn"
+            style="background-color:red;color:white"
+            @click="deleteHolidayRecord(holiday.id)"
+          >
+            <DeleteOutlined />
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
 </div>
 </template>
 
@@ -59,13 +131,23 @@
 import axios from 'axios';
 import {
   CheckCircleFilled,
-  CloseOutlined
+  CloseOutlined,
+  EyeOutlined,
+  CalendarOutlined,
+  EditOutlined,
+  DeleteOutlined,
+  SaveOutlined
 } from '@ant-design/icons-vue';
 export default {
   name: 'DashboardPage',
   components: {
     CheckCircleFilled,
-    CloseOutlined
+    CloseOutlined,
+    EyeOutlined,
+    CalendarOutlined,
+    EditOutlined,
+    DeleteOutlined,
+    SaveOutlined
   },
   data() {
     return {
@@ -74,6 +156,15 @@ export default {
       leaves: 0,
       approvedLeaves: 0,
       rejectLeaves: 0,
+      holidays:[],
+      updateLeaveData:[],
+      editId: null,
+      editHoliday: {
+      title: '',
+      holiday_date: '',
+      description: '',
+      holidayData:[]
+      }
     };
   },
   mounted() {
@@ -82,6 +173,7 @@ export default {
     this.totalLeaves();
     this.approvesLeaves();
     this.rejectedLeaves();
+    this.fetchHolidays();
   },
   methods: {
     async getTotalEmployees() {
@@ -101,6 +193,22 @@ export default {
         console.error("Error fetching new joinees count:", error);
       }
     },
+    editHolidayRow(holiday) {
+    this.editId = holiday.id;
+    this.editHoliday = { ...holiday };
+  },
+  async saveHoliday(id) {
+    try {
+      await axios.put(`http://localhost:8000/api/holiday/${id}`, this.editHoliday);
+      const index = this.holidays.findIndex(h => h.id === id);
+      if (index !== -1) {
+        this.holidays[index] = { ...this.editHoliday };
+      }
+      this.editId = null;
+    } catch (error) {
+      console.error('Update failed', error);
+    }
+  },
     async totalLeaves() {
       try {
         const response = await axios.get('http://localhost:8000/api/total-leaves');
@@ -124,7 +232,24 @@ export default {
       } catch (error) {
         console.error("Error fetching new joinees count:", error);
       }
-    }
+    },
+    async fetchHolidays() {
+      try {
+        const response = await axios.get('http://localhost:8000/api/upcoming-holidays');
+        this.holidays = response.data;
+      } catch (error) {
+        console.error("Error fetching holidays:", error);
+      }
+    },
+    async deleteHolidayRecord(id) {
+  try {
+    await axios.delete(`http://localhost:8000/api/holiday/${id}`);
+    this.holidays = this.holidays.filter(record => record.id !== id);
+  } catch (error) {
+    console.error("Error deleting holiday record:", error);
+  }
+}
+
   }
 };
 </script>
@@ -143,5 +268,10 @@ export default {
   transform: scale(1.05);
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
   z-index: 2;
+}
+.btn{
+  background-color: #00B4D8;
+  color:white;
+  border:none;
 }
 </style>
