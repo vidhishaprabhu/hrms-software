@@ -53,36 +53,46 @@ export default {
   },
   methods: {
     async register() {
-      try {
-        await api.post('/login', {
-          email: this.email,
-          password: this.password,
-        });
+  try {
+    const response = await api.post('/login', {
+      email: this.email,
+      password: this.password,
+    });
 
-        this.error = '';
-        this.message = 'Login was Successfully done !!';
+    const user = response.data.user; // Assuming the backend returns user info including role
 
-        setTimeout(() => {
-          this.$router.push('/dashboard');
-        }, 1000);
+    if (user && user.role === 'admin' || user.role === 'hr') {
+      this.error = '';
+      this.message = 'Login was Successfully done !!';
 
-      } catch (error) {
-        if (error.response && error.response.status === 422) {
-          const errors = error.response.data.errors;
-          if (errors.email) {
-            this.error = errors.email[0];
-          } else if (errors.name) {
-            this.error = errors.name[0];
-          } else if (errors.password) {
-            this.error = errors.password[0];
-          } else {
-            this.error = 'Validation failed. Please check your inputs.';
-          }
-        } else {
-          this.error = 'Login Failed !!. Please Try Again.';
-        }
-      }
+      setTimeout(() => {
+        this.$router.push('/');
+      }, 1000);
+    } else{
+      setTimeout(() => {
+        this.$router.push('/employee-dashboard');
+      }, 1000);
+      
     }
+
+  } catch (error) {
+    if (error.response && error.response.status === 422) {
+      const errors = error.response.data.errors;
+      if (errors.email) {
+        this.error = errors.email[0];
+      } else if (errors.name) {
+        this.error = errors.name[0];
+      } else if (errors.password) {
+        this.error = errors.password[0];
+      } else {
+        this.error = 'Validation failed. Please check your inputs.';
+      }
+    } else {
+      this.error = 'Login Failed !!. Please Try Again.';
+    }
+  }
+}
+
   }
 };
 </script>

@@ -52,7 +52,8 @@ export default {
   data() {
     return {
       navItems: [
-        { name: 'Dashboard', route: '/', icon: 'DashboardOutlined' },
+        { name: 'Admin Dashboard', route: '/', icon: 'DashboardOutlined' },
+        { name: 'Employee Dashboard', route: '/', icon: 'DashboardOutlined' },
         { name: 'Attendance', route: '/attendance', icon: 'CalendarOutlined' },
         { name: 'Leave', route: '/leave', icon: 'LogoutOutlined' },
         { name: 'Approval', route: '/approval', icon: 'CheckCircleOutlined' },
