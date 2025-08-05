@@ -6,6 +6,7 @@ use Illuminate\Database\Seeder;
 use Database\Seeders\LeaveSeeder;
 use Database\Seeders\EmployeeSeeder;
 use Database\Seeders\AttendanceSeeder;
+use Database\Seeders\RolePermissionSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -19,7 +20,8 @@ class DatabaseSeeder extends Seeder
         $this->call([
         EmployeeSeeder::class,
         LeaveSeeder::class, 
-        AttendanceSeeder::class
+        AttendanceSeeder::class,
+        RolePermissionSeeder::class
     ]);
     }
 }

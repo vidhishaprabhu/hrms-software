@@ -29,6 +29,14 @@
                 v-model="password"
               />
             </div>
+            <div class="mb-3">
+              <select class="form-control" v-model="role">
+                <option disabled value="">Select Role</option>
+                <option value="admin">Admin</option>
+                <option value="employee">Employee</option>
+              </select>
+            </div>
+
             <button type="submit" class="btn w-100" style="background-color:#e3f2fd;border:1px solid blue">Register</button>
             <p v-if="error" class="text-danger text-center mt-3">{{ error }}</p>
             <p v-else-if="message" class="text-success text-center mt-3">{{ message }}</p>
@@ -54,7 +62,8 @@ export default {
       email: '',
       password: '',
       error: '',
-      message: ''
+      message: '',
+      role: '',
     };
   },
   methods: {
@@ -64,6 +73,7 @@ export default {
           name: this.name,
           email: this.email,
           password: this.password,
+          role: this.role,
         });
 
         this.error = '';

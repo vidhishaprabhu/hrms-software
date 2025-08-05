@@ -13,29 +13,38 @@ class AuthController extends Controller
         'name' => 'required|string',
         'email' => 'required|email',
         'password' => 'required|min:6',
+        'role' => 'required|in:admin,user,hr' 
     ]);
 
-    // 🔍 Check manually if email already exists (Equality Check)
-    $existingUser = User::where('email', $request->email)->first();
-    $existingName = User:: where('name', $request->name)->first();
-    $existingPassword = User::where('password',$request->password)->first();
-    if ($existingUser) {
+    if ($validator->fails()) {
+        return response()->json(['errors' => $validator->errors()], 422);
+    }
+
+    // 🔍 Check manually for duplicates
+    if (User::where('email', $request->email)->exists()) {
         return response()->json([
             'errors' => ['email' => ['This email is already registered.']]
         ], 422);
     }
-    if($existingName){
-         return response()->json([
+
+    if (User::where('name', $request->name)->exists()) {
+        return response()->json([
             'errors' => ['name' => ['This name is already registered.']]
-        ], 422);       
+        ], 422);
     }
-    $user=User::create([
-        'name'=>$request->name,
-        'email'=>$request->email,
-        'password'=>bcrypt($request->password),
+
+    // ✅ Create new user with role
+    $user = User::create([
+        'name' => $request->name,
+        'email' => $request->email,
+        'password' => bcrypt($request->password),
+        'role' => $request->role, 
     ]);
-        
-        return response()->json(['message'=>'User registered successfully','user'=>$user]);
+
+    return response()->json([
+        'message' => 'User registered successfully',
+        'user' => $user
+    ]);
     }
     public function login(Request $request){
         $request->validate([
