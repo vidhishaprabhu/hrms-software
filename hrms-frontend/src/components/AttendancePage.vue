@@ -7,6 +7,12 @@
     <!-- Center the table properly -->
     <div class="d-flex justify-content-center">
       <div class="table-responsive" style="max-width: 350%;margin-left: 150px;" v-if="attendanceData.length > 0">
+      <div class="text-end mb-3">
+        <button @click="exportAttendanceToCSV" class="btn" style="background-color:#0077B6;color:white">
+          Export
+        </button>
+      </div>
+
         <table class="table table-bordered text-center">
           <thead class="thead-dark">
             <tr>
@@ -82,6 +88,57 @@ export default{
 
   },
   methods:{
+  exportAttendanceToCSV() {
+    const header = [
+      "Sl No",
+      "Employee ID",
+      "First Name",
+      "Last Name",
+      "Email",
+      "Phone Number",
+      "Department",
+      "Designation",
+      "Date of Joining",
+      "Gender",
+      "Attendance Date",
+      "Check In",
+      "Check Out",
+      "Status"
+    ];
+
+    let csv = header.join(",") + "\n";
+
+    this.attendanceData.forEach((record) => {
+      const row = [
+        record.id,
+        record.employee?.employee_id ?? '-',
+        record.employee?.first_name ?? '-',
+        record.employee?.last_name ?? '-',
+        record.employee?.email ?? '-',
+        record.employee?.phone_number ?? '-',
+        record.employee?.department ?? '-',
+        record.employee?.designation ?? '-',
+        record.employee?.date_of_joining ?? '-',
+        record.employee?.gender ?? '-',
+        record.attendance_date ?? '-',
+        record.check_in ?? '-',
+        record.check_out ?? '-',
+        record.status ?? '-'
+      ];
+      csv += row.join(",") + "\n";
+    });
+
+    // Create blob and trigger download
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const link = document.createElement("a");
+    const url = URL.createObjectURL(blob);
+    link.setAttribute("href", url);
+    link.setAttribute("download", "Attendance_Summary.csv");
+    link.style.visibility = "hidden";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  },
     async attendanceSummaryOfData() {
       try {
         const response = await axios.get('http://localhost:8000/api/attendance');
