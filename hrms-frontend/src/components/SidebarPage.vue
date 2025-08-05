@@ -34,7 +34,7 @@ import {
   DollarOutlined,
   ClockCircleOutlined,
   UserAddOutlined,
-  LoginOutlined
+  LoginOutlined,
 } from '@ant-design/icons-vue';
 
 export default {
