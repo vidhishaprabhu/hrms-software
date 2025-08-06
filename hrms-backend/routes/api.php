@@ -22,7 +22,6 @@ use App\Http\Controllers\AttendanceController;
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
-Route::post('/logout', [AuthController::class, 'logout']);
 Route::get('/total-employees', [EmployeeController::class, 'totalEmployees']);
 Route::get('/new-joinees', [EmployeeController::class, 'getNewJoineesThisMonth']);
 Route::get('/total-leaves', [LeaveController::class, 'totalLeavesByEmployee']);
@@ -39,5 +38,5 @@ Route::put('/holiday/{id}', [HolidayController::class, 'updateHoliday']);
 Route::delete('/holiday/{id}', [HolidayController::class, 'destroy']);
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/user', [AuthController::class, 'user']);
-    
+    Route::post('/logout', [AuthController::class, 'logout']);
 });

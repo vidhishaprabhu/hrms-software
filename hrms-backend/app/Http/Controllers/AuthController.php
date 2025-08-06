@@ -69,7 +69,7 @@ public function logout(Request $request)
     $user = $request->user();
 
     if ($user && $user->currentAccessToken()) {
-        $user->currentAccessToken()->delete();  // ✅ Deletes token from DB
+        $user->currentAccessToken()->delete();
         return response()->json(['message' => 'Logged out successfully']);
     }
 

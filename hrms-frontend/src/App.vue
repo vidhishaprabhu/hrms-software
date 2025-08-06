@@ -10,7 +10,7 @@
       <div class="text-white">Month: {{ currentMonthYear }}</div>
       <div class="d-flex justify-content-end align-items-center gap-3">
         <div class="text-white">Welcome, Admin</div>
-        <button class="btn btn-danger d-flex align-items-center gap-2" style="border: none;">
+        <button class="btn btn-danger d-flex align-items-center gap-2" style="border: none;" @click="logout">
           <PoweroffOutlined />
           Logout
         </button>
@@ -34,7 +34,7 @@ import SidebarPage from './components/SidebarPage.vue';
 import {
   PoweroffOutlined
 } from '@ant-design/icons-vue';
-
+import api from './api'; 
 export default {
   name: 'App',
   components: {
@@ -54,6 +54,29 @@ export default {
       return this.$route.path !== '/login' && this.$route.path !== '/register';
     }
   },
+  methods: {
+    async logout() {
+      try {
+        const token = localStorage.getItem('api-token');
+        if (!token) {
+          alert("No token found. Please log in again.");
+          return;
+        }
+        await api.post('/logout', {}, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        localStorage.removeItem('api-token');
+        alert("User logged out successfully");
+        this.$router.push('/login');
+      } catch (error) {
+        this.error = "Logout failed. Please try again.";
+      }
+    },  
+
+  }
 }
 </script>
 

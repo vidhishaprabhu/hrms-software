@@ -58,9 +58,9 @@ export default {
       email: this.email,
       password: this.password,
     });
-
-    const user = response.data.user; // Assuming the backend returns user info including role
-
+    const token = response.data.token;
+    localStorage.setItem('api-token', token);
+    const user = response.data.user; 
     if (user && user.role === 'admin' || user.role === 'hr') {
       this.error = '';
       this.message = 'Login was Successfully done !!';

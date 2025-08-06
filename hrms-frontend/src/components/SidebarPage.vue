@@ -4,18 +4,13 @@
     class="sidebar d-flex flex-column p-3 shadow-sm"
     style="height: 100vh; width: 18%; background: linear-gradient(to bottom right, #0077B6, #00B4D8);"
   >
-  
-    <!-- Logo at the top -->
     <div class="text-center mb-4">
       <img :src="require('@/assets/hrms-logo.png')" alt="Logo" style="width: 120px; height: auto;" />
     </div>
-
-    <!-- Navigation -->
     <ul class="nav flex-column">
       <a href=""><p class="text-white fw-bold">NAVIGATION</p></a>
-      <li class="nav-item mb-3" v-for="item in navItems" :key="item.name">
+      <li class="nav-item mb-3" v-for="item in filteredNavItems" :key="item.name">
         <router-link :to="item.route" class="nav-link text-white d-flex align-items-center sidebar-link">
-          <!-- Use component dynamically -->
           <component :is="item.icon" class="me-4" />
           {{ item.name }}
         </router-link>
@@ -66,13 +61,27 @@ export default {
     };
   },
   computed: {
-    navItemsWithIcons() {
-      return this.navItems.map(item => ({
-        ...item,
-        icon: this.$options.components[item.icon]
-      }));
-    }
+  navItemsWithIcons() {
+    return this.navItems.map(item => ({
+      ...item,
+      icon: this.$options.components[item.icon]
+    }));
+  },
+  filteredNavItems() {
+    const role = localStorage.getItem('role');
+
+    return this.navItemsWithIcons.filter(item => {
+      if (item.name === 'Admin Dashboard') {
+        return role === 'admin' || role === 'hr';
+      }
+      if (item.name === 'Employee Dashboard') {
+        return role === 'employee';
+      }
+      return true;
+    });
   }
+}
+
 };
 </script>
 
