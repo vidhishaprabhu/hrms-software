@@ -75,5 +75,8 @@ public function logout(Request $request)
 
     return response()->json(['message' => 'No token to delete'], 401);
 }
-
+public function user(Request $request)
+{
+    return response()->json($request->user());
+}
 }

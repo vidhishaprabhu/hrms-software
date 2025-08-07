@@ -8,10 +8,23 @@
     <div class="d-flex justify-content-center">
       <div class="table-responsive" style="max-width: 350%;margin-left: 150px;" v-if="attendanceData.length > 0">
       <div class="text-end mb-3">
+        
         <button @click="exportAttendanceToCSV" class="btn" style="background-color:#0077B6;color:white">
           Export
         </button>
       </div>
+      <div class="d-flex justify-content-end mb-3 gap-2">
+  <input
+    type="text"
+    class="form-control"
+    placeholder="Search by name, ID, email..."
+    v-model="searchQuery"
+    style="max-width: 300px;"
+  />
+  <button class="btn" @click="applySearch">Search</button>
+  <button class="btn" @click="resetSearch">Reset</button>
+</div>
+
 
         <table class="table table-bordered text-center">
           <thead class="thead-dark">
@@ -34,7 +47,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="record in attendanceData" :key="record.id">
+            <tr v-for="record in filteredAttendanceData" :key="record.id">
               <td>{{ record.id }}</td>
               <td>{{ record.employee?.employee_id ?? '-' }}</td>
               <td>{{ record.employee?.first_name ?? '-' }}</td>
@@ -75,6 +88,8 @@ export default{
   data(){
     return{
       attendancePresentData: '',
+      searchQuery: '',
+      filteredAttendanceData: [],
       attendanceAbsentData: '',
       attendanceLateData: '',
       checkinData:'',
@@ -88,6 +103,23 @@ export default{
 
   },
   methods:{
+    applySearch() {
+    const query = this.searchQuery.toLowerCase();
+
+    this.filteredAttendanceData = this.attendanceData.filter(record => {
+      const emp = record.employee ?? {};
+      return (
+        String(emp.employee_id ?? '').toLowerCase().includes(query) ||
+        String(emp.first_name ?? '').toLowerCase().includes(query) ||
+        String(emp.last_name ?? '').toLowerCase().includes(query) ||
+        String(emp.email ?? '').toLowerCase().includes(query)
+      );
+    });
+  },
+  resetSearch() {
+    this.searchQuery = '';
+    this.filteredAttendanceData = this.attendanceData;
+  },
   exportAttendanceToCSV() {
     const header = [
       "Sl No",
@@ -143,6 +175,7 @@ export default{
       try {
         const response = await axios.get('http://localhost:8000/api/attendance');
         this.attendanceData = response.data;
+        this.filteredAttendanceData = response.data;
       } catch (error) {
         console.error("Error fetching attendance data:", error);
       }
@@ -158,3 +191,10 @@ export default{
   }
 }
 </script>
+<style scoped>
+.btn{
+  background-color: #0077B6;
+  color: white;
+  border: none;
+}
+</style>

@@ -58,7 +58,6 @@
   </div>
    <h5 class="text-center" style="color:#0077B6;font-weight:600">Upcoming Holidays <CalendarOutlined/></h5>
   <div class="d-flex justify-content-center">
-    
   <table class="table table-bordered text-center w-auto">
     <thead>
       <tr>

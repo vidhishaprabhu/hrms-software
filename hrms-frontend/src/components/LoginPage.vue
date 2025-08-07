@@ -23,7 +23,7 @@
             </div>
            
 
-            <button type="submit" class="btn w-100" style="background-color:#0077B6;color:white;border:1px solid blue">Login</button>
+            <button type="submit" class="btn w-100" style="background-color:#0077B6;color:white;border:1px solid blue" @click="login">Login</button>
             <p v-if="error" class="text-danger text-center mt-3">{{ error }}</p>
             <p v-else-if="message" class="text-success text-center mt-3">{{ message }}</p>
           </form>
@@ -52,27 +52,23 @@ export default {
     };
   },
   methods: {
-    async register() {
+    async login() {
   try {
     const response = await api.post('/login', {
       email: this.email,
       password: this.password,
     });
+
     const token = response.data.token;
     localStorage.setItem('api-token', token);
     const user = response.data.user; 
-    if (user && user.role === 'admin' || user.role === 'hr') {
+
+    if (user && (user.role === 'admin' || user.role === 'hr')) {
       this.error = '';
       this.message = 'Login was Successfully done !!';
-
-      setTimeout(() => {
-        this.$router.push('/');
-      }, 1000);
-    } else{
-      setTimeout(() => {
-        this.$router.push('/employee-dashboard');
-      }, 1000);
-      
+      window.location.href = '/';
+    } else {
+      window.location.href = '/employee-dashboard';
     }
 
   } catch (error) {
@@ -92,6 +88,7 @@ export default {
     }
   }
 }
+
 
   }
 };
