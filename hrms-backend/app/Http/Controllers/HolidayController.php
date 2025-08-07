@@ -28,4 +28,18 @@ class HolidayController extends Controller
         $holiday->delete();
         return response()->json(['message' => 'Holiday record deleted successfully']);
     }
+    public function store(Request $request){
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'holiday_date' => 'required|date',
+            'description' => 'nullable|string',
+            'type' => 'required|in:Public,Restricted'
+        ]);
+        $holiday = Holiday::create($request->all());
+
+        return response()->json([
+            'message' => 'Holiday created successfully',
+            'holiday' => $holiday
+        ]);
+    }
 }

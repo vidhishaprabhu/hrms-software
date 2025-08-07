@@ -56,6 +56,42 @@
       </div>
     </div>
   </div>
+  <h4 class="text-center" style="color:#0077B6;font-weight:600">Add Holidays</h4>
+  <div class="d-flex justify-content-center mt-4">
+  <table class="table table-bordered text-center w-auto">
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Date</th>
+        <th>Description</th>
+        <th colspan="2">Type</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          <input v-model="newHoliday.title" class="form-control" placeholder="Holiday Title" />
+        </td>
+        <td>
+          <input v-model="newHoliday.holiday_date" type="date" class="form-control" />
+        </td>
+        <td>
+          <input v-model="newHoliday.description" class="form-control" placeholder="Description" />
+        </td>
+        <td colspan="2">
+          <select v-model="newHoliday.type" class="form-control mb-2">
+            <option value="Public">Public</option>
+            <option value="Restricted">Restricted</option>
+          </select>
+          <button @click="addHoliday" class="btn btn-primary w-100">
+            <SaveOutlined /> Add Holiday
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
    <h5 class="text-center" style="color:#0077B6;font-weight:600">Upcoming Holidays <CalendarOutlined/></h5>
   <div class="d-flex justify-content-center">
   <table class="table table-bordered text-center w-auto">
@@ -69,6 +105,7 @@
       </tr>
     </thead>
     <tbody>
+      
       <tr v-for="holiday in holidays" :key="holiday.id">
         <td>
           <input
@@ -129,6 +166,7 @@
 
 <script>
 import axios from 'axios';
+import api from '../api';
 import {
   CheckCircleFilled,
   CloseOutlined,
@@ -151,6 +189,12 @@ export default {
   },
   data() {
     return {
+      newHoliday: {
+  title: '',
+  holiday_date: '',
+  description: '',
+  type: 'Public' // Default value
+},
       totalEmployees: 0,
       newJoinees: '',
       leaves: 0,
@@ -176,6 +220,20 @@ export default {
     this.fetchHolidays();
   },
   methods: {
+    async addHoliday() {
+  try {
+    await api.post('/add-holiday', this.newHoliday);
+    this.fetchHolidays(); 
+    this.newHoliday = {
+      title: '',
+      holiday_date: '',
+      description: '',
+      type: 'Public'
+    };
+  } catch (error) {
+    console.error('Error adding holiday:', error);
+  }
+},
     async getTotalEmployees() {
       try {
         const response = await axios.get('http://localhost:8000/api/total-employees');

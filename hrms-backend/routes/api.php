@@ -7,6 +7,7 @@ use App\Http\Controllers\LeaveController;
 use App\Http\Controllers\HolidayController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\AttendanceController;
+use App\Http\Controllers\RestrictedHolidayApplicationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,7 +38,9 @@ Route::get('/upcoming-holidays', [HolidayController::class, 'upcomingHolidays'])
 Route::put('/holiday/{id}', [HolidayController::class, 'updateHoliday']);
 Route::delete('/holiday/{id}', [HolidayController::class, 'destroy']);
 Route::get('/employees', [EmployeeController::class, 'index']);
+Route::post('/add-holiday', [HolidayController::class, 'store']);
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/user', [AuthController::class, 'user']);
     Route::post('/logout', [AuthController::class, 'logout']);
+    Route::post('/apply-holiday', [RestrictedHolidayApplicationController::class, 'store']);
 });
