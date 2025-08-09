@@ -1,7 +1,7 @@
 <template>
-  <div class="container">
-    <div class="row justify-content-center">
-      <div class="col-md-6">
+  <div class="register-page">
+    <div class="overlay">
+      <div class="form-wrapper">
         <div class="card p-4 shadow-sm">
           <h2 class="text-center mb-4" style="color:#0077B6">Register</h2>
           <form @submit.prevent="register">
@@ -37,8 +37,9 @@
                 <option value="hr">HR</option>
               </select>
             </div>
-
-            <button type="submit" class="btn w-100" style="background-color:#0077B6;color:white;border:1px solid blue">Register</button>
+            <button type="submit" class="btn w-100" style="background-color:#0077B6;color:white;border:1px solid blue">
+              Register
+            </button>
             <p v-if="error" class="text-danger text-center mt-3">{{ error }}</p>
             <p v-else-if="message" class="text-success text-center mt-3">{{ message }}</p>
           </form>
@@ -106,5 +107,23 @@ export default {
 </script>
 
 <style scoped>
-/* Optional styling */
+.register-page {
+  background-image: url('@/assets/hrms-back.png'); /* Place your image in src/assets */
+  background-size: cover;
+  background-position: center;
+  min-height: 100vh;
+}
+
+.overlay {
+  /* background-color: rgba(255, 255, 255, 0.85); light overlay for readability */
+  min-height: 60vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.form-wrapper {
+  max-width: 400px;
+  width: 100%;
+}
 </style>

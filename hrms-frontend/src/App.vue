@@ -70,25 +70,37 @@ export default {
   },
   methods: {
     async logout() {
-      try {
-        const token = localStorage.getItem('api-token');
-        if (!token) {
-          alert("No token found. Please log in again.");
-          return;
-        }
-        await api.post('/logout', {}, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+  try {
+    const token = localStorage.getItem('api-token');
+    if (!token) {
+      alert("No token found. Please log in again.");
+      return;
+    }
 
-        localStorage.removeItem('api-token');
-        alert("User logged out successfully");
-        this.$router.push('/login');
-      } catch (error) {
-        this.error = "Logout failed. Please try again.";
-      }
-    }, 
+    await api.post('/logout', {}, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    localStorage.removeItem('api-token');
+    this.$store.commit('clearCheckInTime');
+
+    if (this.user_id) {
+      localStorage.removeItem(`checkInTime_${this.user_id}`);
+    }
+
+    this.checkInTime = null;  // <-- reset local checkInTime data
+
+    alert("User logged out successfully");
+    this.$router.push('/login');
+
+  } catch (error) {
+    console.error("Logout error:", error);
+    alert("Logout failed. Please try again.");
+  }
+},
+
     async getUser(){
       try {
         const response = await api.get('/user');

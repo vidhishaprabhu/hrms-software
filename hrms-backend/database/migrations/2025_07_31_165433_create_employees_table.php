@@ -24,7 +24,7 @@ class CreateEmployeesTable extends Migration
             $table->string('designation')->nullable();
             $table->date('date_of_joining')->nullable();
             $table->string('gender')->nullable();
-            $table->string('status')->default('Active'); // Active, Resigned, etc.
+            $table->string('status')->default('Active');
             $table->timestamps();
         });
     }

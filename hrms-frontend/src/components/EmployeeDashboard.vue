@@ -8,13 +8,59 @@
         <h5>Employee Sign In</h5>
         <h2 class="fw-bold">{{ currentTime }}</h2>
 
-        <button class="btn btn-primary my-2 d-flex align-items-center justify-content-center mx-auto" @click="signOut">
-          <i class="bi bi-fingerprint me-2"></i> Sign Out
+        <button class="btn btn-primary my-2 d-flex align-items-center justify-content-center mx-auto" @click="showModal = true">
+          <i class="bi bi-fingerprint me-2"></i> Sign In
         </button>
+        <div class="modal fade" :class="{ show: showModal }" style="display: block;" v-if="showModal">
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+
+              <!-- Header -->
+              <div class="modal-header text-white" style="background-color: #0077B6;">
+                <h5 class="modal-title">Attendance Mark</h5>
+                <button type="button" class="btn-close" @click="closeModal"></button>
+              </div>
+
+              <!-- Body -->
+              <div class="modal-body">
+                <!-- Location Dropdown -->
+                <div class="mb-3">
+                  <label class="form-label">Enter sign in location<span class="text-danger">*</span></label>
+                  <select class="form-select" v-model="location">
+                    <option value="" disabled>Select</option>
+                    <option value="Work from Home">Work from Home</option>
+                    <option value="Office">Office</option>
+                  </select>
+                </div>
+
+                <!-- Remark -->
+                <div class="mb-3">
+                  <label class="form-label">Remark</label>
+                  <textarea class="form-control" placeholder="Reason" v-model="remark"></textarea>
+                </div>
+              </div>
+
+              <!-- Footer -->
+              <div class="modal-footer">
+                <button class="btn btn-light" @click="closeModal">Cancel</button>
+
+                <!-- Toggle between Sign In and Sign Out -->
+                <button @click="checkIn" class="btn">
+                  Sign In
+                </button>
+
+              </div>
+
+            </div>
+          </div>
+        </div>
 
         <div class="text-start mt-3 px-2">
-          <p><strong>Sign In</strong> : {{ signInTime }}</p>
-          <p><strong>Sign Out</strong> : {{ signOutTime }}</p>
+          <p><strong>Sign In</strong> :
+  <span>{{checkin}}</span>
+</p>
+
+          <!-- <p><strong>Sign Out</strong> : {{checkInTime }}</p> -->
         </div>
 
         <div class="text-end pe-2 text-muted">{{ currentDate }}</div>
@@ -26,13 +72,20 @@
       <div class="card shadow-sm rounded-4 p-3 h-100">
         <h5 class="mb-3">Upcoming Holiday</h5>
         <div style="max-height: 200px; overflow-y: auto;">
-          <div v-for="(holiday, index) in holidaysThisMonth" :key="index" class="d-flex justify-content-between      mb-2">
+          <div v-for="(holiday, index) in holidaysThisMonth" :key="index" class="d-flex justify-content-between mb-2">
             <span :class="{ 'fw-bold': index === 0 }">{{ holiday.title }}</span>
             <span>
-              <a v-if="holiday.type === 'Restricted'" href="#" class="text-primary" @click.prevent="openForm(holiday)">Apply</a>
+              <template v-if="holiday.type === 'Restricted'">
+                <a v-if="!holiday.applied" href="#" class="text-primary" @click.prevent="openForm(holiday)">
+                  Apply
+                </a>
+                <span v-else class="text-success">Applied</span>
+              </template>
               {{ holiday.holiday_date }}
             </span>
+
           </div>
+
           <div v-if="showForm" class="card mt-3 p-3">
             <h5>Apply for Restricted Holiday</h5>
             <form @submit.prevent="submitForm">
@@ -87,6 +140,13 @@ export default {
   name: 'EmployeeDashboard',
   data() {
     return {
+      checkin: null,
+      employeeId: '',
+      showModal: false,
+      // signedIn: localStorage.getItem('signedIn') === 'true',
+      attendanceId: null,
+      location: '',
+      remark: '',
       formData: {
         title: '',
         date: '',
@@ -107,6 +167,22 @@ export default {
 
   },
   computed: {
+    
+  //   formattedCheckIn() {
+  //   const checkIn = this.attendanceData.check_in;
+
+  //   // If no check_in value, show placeholder
+  //   if (!checkIn) return '--:--';
+
+  //   // Try to convert to Date object
+  //   const date = new Date(checkIn);
+
+  //   // If date is invalid, show placeholder
+  //   if (isNaN(date.getTime())) return '--:--';
+
+  //   // Format date to hh:mm AM/PM
+  //   return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
+  // },
     holidaysThisMonth() {
       const currentDate = new Date();
       const currentMonth = currentDate.getMonth(); // 0-indexed
@@ -122,32 +198,120 @@ export default {
     }
 
   },
-  mounted() {
+  
+  async mounted() {
+  await this.getUser();
+  
+  if (this.userData.id) {
+    const storedCheckIn = localStorage.getItem(`checkInTime_${this.userData.id}`);
+    if (storedCheckIn) {
+      this.checkin = storedCheckIn;
+    }
+  }
     this.fetchEmployeeData();
-    this.getUser();
     this.startClock();
     this.generateCalendar();
     this.fetchHolidays();
   },
+  created() {
+    this.signedIn = localStorage.getItem('signedIn') === 'true';
+    this.checkInTime = localStorage.getItem('checkInTime');
+    this.attendanceId = localStorage.getItem('attendanceId');
+    this.employeeId = localStorage.getItem('employeeId');
+  },
   methods: {
-    async submitForm() {
+//     async fetchCheckIn() {
+//   try {
+//     const response = await api.get('/attendance');
+//     this.checkin= response.data.checkInTime; 
+//     } catch (error) {
+//     console.error('Error fetching check-in time:', error);
+//     this.checkin = '--:--';
+//   }
+// },
+
+async checkIn() {
+  this.isLoading = true;
+  this.error = null;
+
   try {
-    const payload = {
-      holiday_name: this.formData.title,
-      reason: this.formData.reason
-    };
+    const response = await api.post('/attendance', { user_id: this.userData.id });
+    this.checkin = response.data.check_in_time;
+    this.showModal = false;
 
-    await api.post('/apply-holiday', payload);
+    // Save to localStorage using a key unique to user
+    localStorage.setItem(`checkInTime_${this.userData.id}`, this.checkin);
 
-    // Clear form and hide it
-    this.formData.reason = '';
-    this.showForm = false;
-  } catch (error) {
-    console.error('Error submitting holiday application:', error);
+  } catch (err) {
+    if (err.response && err.response.status === 400 && err.response.data.message) {
+      this.error = err.response.data.message;
+    } else {
+      this.error = 'Check-in failed. Please try again.';
+    }
+    console.error(err);
+  } finally {
+    this.isLoading = false;
   }
 },
-    
-  
+
+
+
+
+    async submitSignOut() {
+      try {
+        const checkOutTime = new Date();
+        this.signOutTime = new Date().toLocaleTimeString('en-US', {
+          hour12: true
+        });
+
+        const payload = {
+          check_in: this.checkInTime,
+          check_out: checkOutTime
+        };
+
+        await api.put(`/attendance/${this.attendanceId}`, payload);
+
+        // Clear local state
+        this.signedIn = false;
+        this.checkInTime = null;
+        this.attendanceId = null;
+        localStorage.removeItem('signedIn');
+        localStorage.removeItem('checkInTime');
+        localStorage.removeItem('attendanceId');
+
+        this.closeModal();
+      } catch (error) {
+        console.error('Sign out error:', error);
+      }
+    },
+    closeModal() {
+      this.showModal = false;
+      this.location = '';
+      this.remark = '';
+    },
+    async submitForm() {
+      try {
+        const payload = {
+          holiday_name: this.formData.title,
+          reason: this.formData.reason,
+        };
+
+        await api.post('/apply-holiday', payload);
+        const appliedHoliday = this.holidays.find(
+          (h) => h.title === this.formData.title
+        );
+        if (appliedHoliday) {
+          appliedHoliday.applied = true;
+        }
+
+        // Clear form
+        this.formData.reason = '';
+        this.showForm = false;
+      } catch (error) {
+        console.error('Error submitting holiday application:', error);
+      }
+    },
+
     openForm(holiday) {
       this.formData.title = holiday.title;
       this.formData.date = holiday.holiday_date;
@@ -159,11 +323,15 @@ export default {
       setInterval(this.updateTime, 1000);
     },
     updateTime() {
-      const now = new Date();
-      this.currentTime = now.toLocaleTimeString('en-US', {
-        hour12: true
-      });
-    },
+  const now = new Date();
+  this.currentTime = now.toLocaleTimeString('en-IN', {
+    hour12: true,
+    timeZone: 'Asia/Kolkata',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit'
+  });
+},
     generateCalendar() {
       const daysInMonth = 31;
       const firstDay = new Date(2025, 7, 1).getDay();
