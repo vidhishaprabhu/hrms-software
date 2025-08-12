@@ -32,6 +32,7 @@
       <router-view />
     </div>
   </div>
+  <footer class="footer">© HR Management System designed by <span class="designer-name">Vidisha Prabhu B</span></footer>
 </div>
 </template>
 
@@ -122,4 +123,28 @@ export default {
   color: #2c3e50;
   margin: 0;
 }
+.footer {
+    background: linear-gradient(to bottom right, #0077B6, #00B4D8);
+    color: #fff;
+    text-align: center;
+    padding: 12px 20px;
+    font-size: 14px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    letter-spacing: 0.5px;
+  }
+
+  .designer-name {
+    font-weight: bold;
+    color: white; /* Yellow highlight */
+  }
+
+  .footer:hover {
+    background:  #00B4D8;
+    transition: background 0.3s ease;
+  }
 </style>

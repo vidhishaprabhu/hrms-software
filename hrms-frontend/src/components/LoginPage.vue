@@ -64,7 +64,9 @@ export default {
 
         const token = response.data.token;
         localStorage.setItem('api-token', token);
-        const user = response.data.user;
+        const user = response.data.user
+        localStorage.setItem('user-role', user.role);
+        console.log("User",user);
 
         if (user && (user.role === 'admin' || user.role === 'hr')) {
           this.error = '';

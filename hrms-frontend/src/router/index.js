@@ -20,11 +20,14 @@ router.beforeEach((to, from, next) => {
   const token = localStorage.getItem('api-token');
   const userRole = localStorage.getItem('user-role');
 
+  console.log("User Role:", userRole, "Route Role:", to.meta.role); // debug
+
   if (to.meta.requiresAuth) {
     if (!token) {
       next('/');
     } else {
-      if (to.meta.role && to.meta.role !== userRole) {
+      // Only block if both roles exist and they don't match (case-insensitive)
+      if (to.meta.role && userRole && to.meta.role.toLowerCase() !== userRole.toLowerCase()) {
         alert('Access Denied: Unauthorized Role');
         next('/');
       } else {
@@ -35,5 +38,6 @@ router.beforeEach((to, from, next) => {
     next();
   }
 });
+
 
 export default router

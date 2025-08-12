@@ -77,6 +77,8 @@ export default {
           password: this.password,
           role: this.role,
         });
+        // const role = response.data.role;
+        // localStorage.setItem('user-role', role);
 
         this.error = '';
         this.message = 'Registration was Successfully done !!';
