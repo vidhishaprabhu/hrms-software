@@ -6,10 +6,10 @@ import LoginPage from '../components/LoginPage.vue'
 import EmployeeDashboard from '../components/EmployeeDashboard.vue'
 const routes = [
   { path: '/register', name: 'RegisterPage', component: RegisterPage },
-  { path: '/admin-dashboard', name: 'DashboardPage', component: DashboardPage,meta: { requiresAuth: true } ,role: 'admin'},
-  { path: '/attendance', name: 'AttendancePage', component: AttendancePage,meta: { requiresAuth: true },role: 'admin' },
+  { path: '/admin-dashboard', name: 'DashboardPage', component: DashboardPage,meta: { requiresAuth: true, role: 'admin' } },
+  { path: '/attendance', name: 'AttendancePage', component: AttendancePage,meta: { requiresAuth: true, role: 'admin' } },
   { path: '/', name: 'LoginPage', component: LoginPage },
-  { path: '/employee-dashboard', name: 'EmployeeDashboard', component: EmployeeDashboard,meta: { requiresAuth: true }, role: 'employee' },
+  { path: '/employee-dashboard', name: 'EmployeeDashboard', component: EmployeeDashboard,meta: { requiresAuth: true, role: 'employee' } },
 ]
 
 const router = createRouter({
@@ -22,11 +22,11 @@ router.beforeEach((to, from, next) => {
 
   if (to.meta.requiresAuth) {
     if (!token) {
-      next('/login');
+      next('/');
     } else {
       if (to.meta.role && to.meta.role !== userRole) {
         alert('Access Denied: Unauthorized Role');
-        next('/login');
+        next('/');
       } else {
         next();
       }

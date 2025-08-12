@@ -46,7 +46,7 @@
         </div>
         <p class="text-center mt-4 fw-bold fs-5" style="font-family:italic">
           Already have an account ? 
-          <router-link to="/login" style="color:#0077B6">Login</router-link>
+          <router-link to="/" style="color:#0077B6">Login</router-link>
         </p>
       </div>
     </div>

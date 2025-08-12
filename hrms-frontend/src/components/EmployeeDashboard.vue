@@ -10,7 +10,7 @@
 
         <button
   class="btn btn-primary my-2 d-flex align-items-center justify-content-center mx-auto"
-  @click="isSignedIn ? signOut() : showModal = true"
+  @click="showModal = true"
 >
   <i class="bi bi-fingerprint me-2"></i>
   {{ isSignedIn ? 'Sign Out' : 'Sign In' }}
@@ -213,9 +213,14 @@ export default {
   
   if (this.userData.id) {
     const storedCheckIn = localStorage.getItem(`checkInTime_${this.userData.id}`);
+    const storedCheckOut = localStorage.getItem(`checkOutTime_${this.userData.id}`);
     if (storedCheckIn) {
       this.checkin = storedCheckIn;
       this.isSignedIn = true;
+    }
+    if (storedCheckOut) {
+      this.signOutTime = storedCheckOut;
+      this.isSignedIn = false;
     }
   }
     this.fetchEmployeeData();
@@ -268,33 +273,33 @@ async checkIn() {
 
 
 
-    async submitSignOut() {
-      try {
-        const checkOutTime = new Date();
-        this.signOutTime = new Date().toLocaleTimeString('en-US', {
-          hour12: true
-        });
+    // async submitSignOut() {
+    //   try {
+    //     const checkOutTime = new Date();
+    //     this.signOutTime = new Date().toLocaleTimeString('en-US', {
+    //       hour12: true
+    //     });
 
-        const payload = {
-          check_in: this.checkInTime,
-          check_out: checkOutTime
-        };
+    //     const payload = {
+    //       check_in: this.checkInTime,
+    //       check_out: checkOutTime
+    //     };
 
-        await api.put(`/attendance/${this.attendanceId}`, payload);
+    //     await api.put(`/attendance/${this.attendanceId}`, payload);
 
-        // Clear local state
-        this.signedIn = false;
-        this.checkInTime = null;
-        this.attendanceId = null;
-        localStorage.removeItem('signedIn');
-        localStorage.removeItem('checkInTime');
-        localStorage.removeItem('attendanceId');
+    //     // Clear local state
+    //     this.signedIn = false;
+    //     this.checkInTime = null;
+    //     this.attendanceId = null;
+    //     localStorage.removeItem('signedIn');
+    //     localStorage.removeItem('checkInTime');
+    //     localStorage.removeItem('attendanceId');
 
-        this.closeModal();
-      } catch (error) {
-        console.error('Sign out error:', error);
-      }
-    },
+    //     this.closeModal();
+    //   } catch (error) {
+    //     console.error('Sign out error:', error);
+    //   }
+    // },
     closeModal() {
       this.showModal = false;
       this.location = '';
@@ -381,9 +386,9 @@ async checkIn() {
 
     this.signOutTime = response.data.check_out_time;
     this.isSignedIn = false;
-
-    // Clear any local check-in storage
-    // localStorage.removeItem(`checkInTime_${this.userData.id}`);
+    this.showModal=false;
+    
+    localStorage.setItem(`checkOutTime_${this.userData.id}`, this.signOutTime);
 
     alert('Sign out successful');
   } catch (error) {
