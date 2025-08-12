@@ -56,7 +56,7 @@ export default {
         { name: 'Payroll', route: '/payroll', icon: 'DollarOutlined' },
         { name: 'Shift Setup', route: '/shift-setup', icon: 'ClockCircleOutlined' },
         { name: 'Register', route: '/register', icon: 'UserAddOutlined' },
-        { name: 'Login', route: '/login', icon: 'LoginOutlined' }
+        { name: 'Login', route: '/', icon: 'LoginOutlined' }
       ]
     };
   },

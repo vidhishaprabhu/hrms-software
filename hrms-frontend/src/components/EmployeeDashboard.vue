@@ -8,9 +8,14 @@
         <h5>Employee Sign In</h5>
         <h2 class="fw-bold">{{ currentTime }}</h2>
 
-        <button class="btn btn-primary my-2 d-flex align-items-center justify-content-center mx-auto" @click="showModal = true">
-          <i class="bi bi-fingerprint me-2"></i> Sign In
-        </button>
+        <button
+  class="btn btn-primary my-2 d-flex align-items-center justify-content-center mx-auto"
+  @click="isSignedIn ? signOut() : showModal = true"
+>
+  <i class="bi bi-fingerprint me-2"></i>
+  {{ isSignedIn ? 'Sign Out' : 'Sign In' }}
+</button>
+
         <div class="modal fade" :class="{ show: showModal }" style="display: block;" v-if="showModal">
           <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -45,9 +50,10 @@
                 <button class="btn btn-light" @click="closeModal">Cancel</button>
 
                 <!-- Toggle between Sign In and Sign Out -->
-                <button @click="checkIn" class="btn">
-                  Sign In
-                </button>
+               <button @click="isSignedIn ? signOut() : checkIn()" class="btn">
+                {{ isSignedIn ? 'Sign Out' : 'Sign In' }}
+              </button>
+
 
               </div>
 
@@ -57,10 +63,12 @@
 
         <div class="text-start mt-3 px-2">
           <p><strong>Sign In</strong> :
-  <span>{{checkin}}</span>
-</p>
+            <span>{{checkin}}</span>
+          </p>
 
-          <!-- <p><strong>Sign Out</strong> : {{checkInTime }}</p> -->
+          <p><strong>Sign Out</strong> :
+          <span>{{signOutTime}}</span>
+          </p>
         </div>
 
         <div class="text-end pe-2 text-muted">{{ currentDate }}</div>
@@ -140,6 +148,7 @@ export default {
   name: 'EmployeeDashboard',
   data() {
     return {
+      isSignedIn: false,
       checkin: null,
       employeeId: '',
       showModal: false,
@@ -206,6 +215,7 @@ export default {
     const storedCheckIn = localStorage.getItem(`checkInTime_${this.userData.id}`);
     if (storedCheckIn) {
       this.checkin = storedCheckIn;
+      this.isSignedIn = true;
     }
   }
     this.fetchEmployeeData();
@@ -237,6 +247,7 @@ async checkIn() {
   try {
     const response = await api.post('/attendance', { user_id: this.userData.id });
     this.checkin = response.data.check_in_time;
+    this.isSignedIn = true;
     this.showModal = false;
 
     // Save to localStorage using a key unique to user
@@ -360,13 +371,26 @@ async checkIn() {
 
       this.calendar = calendar;
     },
-    signOut() {
-      alert('Signed out!');
-      this.signOutTime = new Date().toLocaleTimeString('en-US', {
-        hour12: true
-      });
-    },
+   async signOut() {
+  try {
+    if (!this.userData?.id) {
+      alert("User ID not found. Please log in again.");
+      return;
+    }
+    const response = await api.put(`/attendance/signout/${this.userData.id}`);
 
+    this.signOutTime = response.data.check_out_time;
+    this.isSignedIn = false;
+
+    // Clear any local check-in storage
+    // localStorage.removeItem(`checkInTime_${this.userData.id}`);
+
+    alert('Sign out successful');
+  } catch (error) {
+    console.error('Sign out failed:', error.response?.data || error.message);
+    alert(error.response?.data?.message || 'Sign out failed. Please try again.');
+  }
+},
     async fetchEmployeeData() {
       try {
         const response = await api.get('/employees');

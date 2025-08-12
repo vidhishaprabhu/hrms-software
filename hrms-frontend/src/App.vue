@@ -58,10 +58,10 @@ export default {
   },
   computed: {
     showSidebar() {
-      return this.$route.path !== '/login' && this.$route.path !== '/register';
+      return this.$route.path !== '/' && this.$route.path !== '/register';
     },
     showNavbarContent() {
-    return this.$route.path !== '/login' && this.$route.path !== '/register';
+    return this.$route.path !== '/' && this.$route.path !== '/register';
   },
 
   },
@@ -93,7 +93,7 @@ export default {
     this.checkInTime = null;  // <-- reset local checkInTime data
 
     alert("User logged out successfully");
-    this.$router.push('/login');
+    this.$router.push('/');
 
   } catch (error) {
     console.error("Logout error:", error);

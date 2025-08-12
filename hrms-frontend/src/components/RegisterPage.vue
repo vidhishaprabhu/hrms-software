@@ -82,7 +82,7 @@ export default {
         this.message = 'Registration was Successfully done !!';
 
         setTimeout(() => {
-          this.$router.push('/login');
+          this.$router.push('/');
         }, 1000);
 
       } catch (error) {

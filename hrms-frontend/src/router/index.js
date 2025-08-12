@@ -6,9 +6,9 @@ import LoginPage from '../components/LoginPage.vue'
 import EmployeeDashboard from '../components/EmployeeDashboard.vue'
 const routes = [
   { path: '/register', name: 'RegisterPage', component: RegisterPage },
-  { path: '/', name: 'DashboardPage', component: DashboardPage,meta: { requiresAuth: true } ,role: 'admin'},
+  { path: '/admin-dashboard', name: 'DashboardPage', component: DashboardPage,meta: { requiresAuth: true } ,role: 'admin'},
   { path: '/attendance', name: 'AttendancePage', component: AttendancePage,meta: { requiresAuth: true },role: 'admin' },
-  { path: '/login', name: 'LoginPage', component: LoginPage },
+  { path: '/', name: 'LoginPage', component: LoginPage },
   { path: '/employee-dashboard', name: 'EmployeeDashboard', component: EmployeeDashboard,meta: { requiresAuth: true }, role: 'employee' },
 ]
 

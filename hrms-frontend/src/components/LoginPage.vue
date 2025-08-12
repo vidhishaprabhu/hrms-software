@@ -69,7 +69,7 @@ export default {
         if (user && (user.role === 'admin' || user.role === 'hr')) {
           this.error = '';
           this.message = 'Login was Successfully done !!';
-          window.location.href = '/';
+          window.location.href = '/admin-dashboard';
         } else {
           window.location.href = '/employee-dashboard';
         }

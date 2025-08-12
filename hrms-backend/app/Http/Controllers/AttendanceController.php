@@ -55,6 +55,29 @@ public function store(Request $request)
         'check_in_time' => $attendance->check_in->toDateTimeString(),
     ]);
 }
+public function signOutByUserId($userId)
+{
+    $attendance = Attendance::where('user_id', $userId)
+        ->whereNull('check_out')
+        ->latest('check_in')
+        ->first();
+
+    if (!$attendance) {
+        return response()->json(['message' => 'No active sign-in found'], 404);
+    }
+
+    $attendance->check_out = now();
+    $attendance->save();
+
+    return response()->json([
+        'message' => 'Sign out successful',
+        'attendance_id' => $attendance->id,
+        'check_out_time' => $attendance->check_out->toDateTimeString(),
+    ]);
+}
+
+
+
 
 
 
