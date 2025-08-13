@@ -9,8 +9,8 @@
         <h2 class="fw-bold">{{ currentTime }}</h2>
 
         <button
-  class="btn btn-primary my-2 d-flex align-items-center justify-content-center mx-auto"
-  @click="showModal = true"
+  class="btn my-2 d-flex align-items-center justify-content-center mx-auto"
+  @click="showModal = true" style="background-color: #0077B6; color: white;"
 >
   <i class="bi bi-fingerprint me-2"></i>
   {{ isSignedIn ? 'Sign Out' : 'Sign In' }}
@@ -50,7 +50,8 @@
                 <button class="btn btn-light" @click="closeModal">Cancel</button>
 
                 <!-- Toggle between Sign In and Sign Out -->
-               <button @click="isSignedIn ? signOut() : checkIn()" class="btn">
+               <button @click="isSignedIn ? signOut() : checkIn()" class="btn" style="background-color: #0077B6; color: white;"
+>
                 {{ isSignedIn ? 'Sign Out' : 'Sign In' }}
               </button>
 
@@ -137,9 +138,79 @@
         </table>
       </div>
     </div>
-
+    <div class="col-md-4">
+  <div class="card shadow-sm rounded-4 p-3 text-center h-100">
+    <h3 class="text-center">Attendance Monthly</h3>
+    <i class="bi bi-calendar-event-fill"></i>
+    <div class="card-body">
+      <div class="leave-item">
+        <span class="leave-name" style="font-size:13px">Present</span>
+        <div class="leave-right">
+          <span class="leave-days">5.5</span>
+        </div>
+      </div>
+      <div class="leave-item">
+        <span class="leave-name" style="font-size:13px">Absent</span>
+        <div class="leave-right">
+          <span class="leave-days">5.5</span>
+        </div>
+      </div>
+      <div class="leave-item">
+        <span class="leave-name" style="font-size:13px">Leave</span>
+        <div class="leave-right">
+          <span class="leave-days">5.5</span>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
+<div class="col-md-4">
+  <div class="card shadow-sm rounded-4 p-3 text-center h-100">
+    <h3>Leave Balance</h3>
+      <i class="bi bi-calendar-check-fill"></i>
+    <div class="card-body">
+      <div class="leave-item">
+        <span class="leave-name" style="font-size:13px">Bereavement Leave</span>
+        <div class="leave-right">
+          <span class="leave-days">5.5</span>
+          <a href="#">Apply</a>
+        </div>
+      </div>
+      <div class="leave-item">
+        <span class="leave-name" style="font-size:13px">Annual Leave</span>
+        <div class="leave-right">
+          <span class="leave-days">5</span>
+          <a href="#">Apply</a>
+        </div>
+      </div>
+      <div class="leave-item">
+        <span class="leave-name" style="font-size:13px">Restricted Holiday</span>
+        <div class="leave-right">
+          <span class="leave-days">5</span>
+          <a href="#">Apply</a>
+        </div>
+      </div>
+      <div class="leave-item">
+        <span class="leave-name" style="font-size:13px">Work from Home</span>
+        <div class="leave-right">
+          <span class="leave-days">5</span>
+          <a href="#">Apply</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="col-md-4">
+  <div class="card shadow-sm rounded-4 p-3 text-center h-100">
+    <h3>Quick Access</h3>
+    <div class="card-body">
+      <a href="#">IT Statement</a>
+    </div>
+  </div>
+</div>
+  </div>
+</div>
+
 </template>
 
 <script>
@@ -148,6 +219,7 @@ export default {
   name: 'EmployeeDashboard',
   data() {
     return {
+      currentTime:'',
       isSignedIn: false,
       checkin: null,
       employeeId: '',
@@ -224,10 +296,14 @@ export default {
     }
   }
     this.fetchEmployeeData();
+    console.log('mounted() called');
     this.startClock();
     this.generateCalendar();
     this.fetchHolidays();
   },
+  beforeUnmount() {
+  clearInterval(this.timer); // prevent memory leaks
+},
   created() {
     this.signedIn = localStorage.getItem('signedIn') === 'true';
     this.checkInTime = localStorage.getItem('checkInTime');
@@ -269,37 +345,6 @@ async checkIn() {
     this.isLoading = false;
   }
 },
-
-
-
-
-    // async submitSignOut() {
-    //   try {
-    //     const checkOutTime = new Date();
-    //     this.signOutTime = new Date().toLocaleTimeString('en-US', {
-    //       hour12: true
-    //     });
-
-    //     const payload = {
-    //       check_in: this.checkInTime,
-    //       check_out: checkOutTime
-    //     };
-
-    //     await api.put(`/attendance/${this.attendanceId}`, payload);
-
-    //     // Clear local state
-    //     this.signedIn = false;
-    //     this.checkInTime = null;
-    //     this.attendanceId = null;
-    //     localStorage.removeItem('signedIn');
-    //     localStorage.removeItem('checkInTime');
-    //     localStorage.removeItem('attendanceId');
-
-    //     this.closeModal();
-    //   } catch (error) {
-    //     console.error('Sign out error:', error);
-    //   }
-    // },
     closeModal() {
       this.showModal = false;
       this.location = '';
@@ -335,19 +380,17 @@ async checkIn() {
       this.showForm = true;
     },
     startClock() {
+    console.log('startClock() called');
+    this.updateTime();
+    this.timer = setInterval(() => {
       this.updateTime();
-      setInterval(this.updateTime, 1000);
-    },
-    updateTime() {
-  const now = new Date();
-  this.currentTime = now.toLocaleTimeString('en-IN', {
-    hour12: true,
-    timeZone: 'Asia/Kolkata',
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit'
-  });
-},
+    }, 1000);
+  },
+  updateTime() {
+    const now = new Date();
+    this.currentTime = now.toLocaleTimeString();
+    console.log('tick ->', this.currentTime);
+  },
     generateCalendar() {
       const daysInMonth = 31;
       const firstDay = new Date(2025, 7, 1).getDay();
@@ -362,8 +405,6 @@ async checkIn() {
             });
           } else {
             let className = '';
-            // if ([1, 2, 4, 5, 6].includes(dayCount)) className = 'bg-success text-white rounded-circle';
-            // else if ([3].includes(dayCount)) className = 'bg-warning text-dark rounded-circle';
             weekRow.push({
               date: dayCount,
               class: className
@@ -426,26 +467,93 @@ async checkIn() {
 </script>
 
 <style scoped>
-.calendar-table {
-  table-layout: fixed;
-  width: 100%;
-  font-size: 14px;
+
+.dashboard-cards {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap; /* Makes them wrap on small screens */
+    padding: 20px;
+  }
+
+  .card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    width: 300px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+  }
+
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #f0f0f0;
+  }
+
+  .card-header h3 {
+    font-size: 1.1rem;
+    margin: 0;
+    font-weight: bold;
+    color: #333;
+  }
+
+  .card-header i {
+    font-size: 1.5rem;
+  }
+
+  .subtitle {
+    font-size: 0.9rem;
+    color: #666;
+    margin: 8px 0;
+    font-weight: 500;
+  }
+
+  .card-body .row {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 0;
+    font-size: 0.95rem;
+    border-bottom: 1px solid #f5f5f5;
+  }
+
+  .card-body a {
+   
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  .card-body a:hover {
+    text-decoration: underline;
+  }
+  .leave-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 10px;
 }
 
-.calendar-table td {
-  height: 35px;
-  vertical-align: middle;
+.leave-right {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* space between 5.5 and Apply */
 }
 
-.card {
-  background-color: #ffffff;
-  border-radius: 16px;
-  border: none;
-  border: 1px solid #0077B6;
+.leave-name {
+  font-weight: bold;
 }
 
-.btn {
-  background-color: #0077B6;
-  color: white;
+.leave-days {
+  color: #0077B6;
 }
+
 </style>
