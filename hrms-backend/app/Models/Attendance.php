@@ -14,7 +14,13 @@ class Attendance extends Model
         'check_out',
         'status',
         'note',
+        'user_id', // Added user_id to fillable attributes
     ];
+    protected $casts = [
+    'check_in' => 'datetime',
+    'check_out' => 'datetime',
+];
+
 
     // Define the relationship with Employee
     public function employee()

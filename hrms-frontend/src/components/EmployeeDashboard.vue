@@ -5,12 +5,18 @@
     <!-- Sign In Card -->
     <div class="col-md-4">
       <div class="card shadow-sm rounded-4 text-center p-3 h-100" style="margin-left: 20px;">
-        <h5>Employee Sign In</h5>
+        <!-- <span>Time {{workinghours}}</span> -->
+        <div style="display: flex; align-items: center;">
+  <h5>Employee Sign In</h5>
+  <i class="bi bi-box-arrow-in-right" 
+     style="font-size: 2.2rem; color: #00B4D8; margin-left: auto;"></i>
+</div>
+
         <h2 class="fw-bold">{{ currentTime }}</h2>
 
         <button
   class="btn my-2 d-flex align-items-center justify-content-center mx-auto"
-  @click="showModal = true" style="background-color: #0077B6; color: white;"
+  @click="showModal = true" style="background-color: #0077B6; color: white;width:65%"
 >
   <i class="bi bi-fingerprint me-2"></i>
   {{ isSignedIn ? 'Sign Out' : 'Sign In' }}
@@ -119,11 +125,14 @@
     </div>
     <div class="col-md-4">
       <div class="card shadow-sm rounded-4 p-3 text-center h-100">
-        <div class="d-flex justify-content-between align-items-center mb-2">
-          <button class="btn btn-sm btn-light" disabled>&lt;</button>
-          <h5 class="mb-0">{{ currentMonthYear }}</h5>
-          <button class="btn btn-sm btn-light" disabled>&gt;</button>
-        </div>
+        <div class="d-flex justify-content-between align-items-center mb-3">
+  <button @click="prevMonth" style="border:none; background:none; padding:0; cursor:pointer;"><LeftOutlined style="font-size: 20px; color: black;" /></button>
+  <h4>{{ new Date(currentYear, currentMonth).toLocaleString('default', { month: 'long', year: 'numeric' }) }}</h4>
+  <button @click="nextMonth" style="border:none; background:none; padding:0; cursor:pointer;">
+  <RightOutlined style="font-size: 20px; color: black;" />
+</button>
+
+</div>
         <table class="table table-bordered calendar-table">
           <thead>
             <tr>
@@ -140,7 +149,7 @@
     </div>
     <div class="col-md-4">
   <div class="card shadow-sm rounded-4 p-3 text-center h-100">
-    <h3 class="text-center">Attendance Monthly</h3>
+    <h5 class="text-center">Attendance Monthly</h5>
     <i class="bi bi-calendar-event-fill"></i>
     <div class="card-body">
       <div class="leave-item">
@@ -166,7 +175,7 @@
 </div>
 <div class="col-md-4">
   <div class="card shadow-sm rounded-4 p-3 text-center h-100">
-    <h3>Leave Balance</h3>
+    <h5>Leave Balance</h5>
       <i class="bi bi-calendar-check-fill"></i>
     <div class="card-body">
       <div class="leave-item">
@@ -202,7 +211,7 @@
 </div>
 <div class="col-md-4">
   <div class="card shadow-sm rounded-4 p-3 text-center h-100">
-    <h3>Quick Access</h3>
+    <h5>Quick Access</h5>
     <div class="card-body">
       <a href="#">IT Statement</a>
     </div>
@@ -215,10 +224,16 @@
 
 <script>
 import api from '../api';
+import { RightOutlined,LeftOutlined } from '@ant-design/icons-vue';
 export default {
   name: 'EmployeeDashboard',
+  components: {
+    RightOutlined,
+    LeftOutlined
+  },
   data() {
     return {
+    workinghours: '',
       currentTime:'',
       isSignedIn: false,
       checkin: null,
@@ -233,6 +248,8 @@ export default {
         date: '',
         reason: ''
       },
+      currentMonth: new Date().getMonth(), // 0 = Jan
+      currentYear: new Date().getFullYear(),
       showForm: false,
       currentMonthYear: new Date().toLocaleString('default', {
         month: 'short',
@@ -282,25 +299,25 @@ export default {
   
   async mounted() {
   await this.getUser();
-  
+
+  // 1. Load from localStorage for instant UI
+  const storedStatus = localStorage.getItem("isSignedIn");
+  this.isSignedIn = storedStatus === "true";
+
   if (this.userData.id) {
-    const storedCheckIn = localStorage.getItem(`checkInTime_${this.userData.id}`);
-    const storedCheckOut = localStorage.getItem(`checkOutTime_${this.userData.id}`);
-    if (storedCheckIn) {
-      this.checkin = storedCheckIn;
-      this.isSignedIn = true;
-    }
-    if (storedCheckOut) {
-      this.signOutTime = storedCheckOut;
-      this.isSignedIn = false;
-    }
+    this.checkin = localStorage.getItem(`checkInTime_${this.userData.id}`) || null;
+    this.signOutTime = localStorage.getItem(`checkOutTime_${this.userData.id}`) || null;
   }
-    this.fetchEmployeeData();
-    console.log('mounted() called');
-    this.startClock();
-    this.generateCalendar();
-    this.fetchHolidays();
-  },
+
+  // 2. Verify with backend (final authority)
+  await this.checkSignInStatus();
+
+  // 3. Continue as usual
+  this.fetchEmployeeData();
+  this.startClock();
+  this.generateCalendar();
+  this.fetchHolidays();
+},
   beforeUnmount() {
   clearInterval(this.timer); // prevent memory leaks
 },
@@ -311,6 +328,15 @@ export default {
     this.employeeId = localStorage.getItem('employeeId');
   },
   methods: {
+    // async markAbsent() {
+    //   try {
+    //     const response = await api.post('/attendance/mark-absent');
+    //     this.message = response.data;
+    //   } catch (error) {
+    //     console.error('Error marking absent:', error);
+    //     this.message = 'Failed to mark absentees.';
+    //   }
+    // },
 //     async fetchCheckIn() {
 //   try {
 //     const response = await api.get('/attendance');
@@ -320,7 +346,14 @@ export default {
 //     this.checkin = '--:--';
 //   }
 // },
-
+async checkSignInStatus() {
+    try {
+      const response = await api.get('/attendance/status'); // Laravel route for status()
+      this.isSignedIn = response.data.isSignedIn;
+    } catch (error) {
+      console.error(error);
+    }
+  },
 async checkIn() {
   this.isLoading = true;
   this.error = null;
@@ -333,6 +366,7 @@ async checkIn() {
 
     // Save to localStorage using a key unique to user
     localStorage.setItem(`checkInTime_${this.userData.id}`, this.checkin);
+    localStorage.setItem("isSignedIn", "true");
 
   } catch (err) {
     if (err.response && err.response.status === 400 && err.response.data.message) {
@@ -392,46 +426,64 @@ async checkIn() {
     console.log('tick ->', this.currentTime);
   },
     generateCalendar() {
-      const daysInMonth = 31;
-      const firstDay = new Date(2025, 7, 1).getDay();
-      const calendar = [];
-      let dayCount = 1 - firstDay;
-      for (let week = 0; week < 6; week++) {
-        const weekRow = [];
-        for (let day = 0; day < 7; day++) {
-          if (dayCount < 1 || dayCount > daysInMonth) {
-            weekRow.push({
-              date: ''
-            });
-          } else {
-            let className = '';
-            weekRow.push({
-              date: dayCount,
-              class: className
-            });
-          }
-          dayCount++;
-        }
-        calendar.push(weekRow);
-      }
+    const daysInMonth = new Date(this.currentYear, this.currentMonth + 1, 0).getDate();
+    const firstDay = new Date(this.currentYear, this.currentMonth, 1).getDay();
+    
+    const calendar = [];
+    let dayCount = 1 - firstDay;
 
-      this.calendar = calendar;
-    },
+    for (let week = 0; week < 6; week++) {
+      const weekRow = [];
+      for (let day = 0; day < 7; day++) {
+        if (dayCount < 1 || dayCount > daysInMonth) {
+          weekRow.push({ date: '' });
+        } else {
+          weekRow.push({ date: dayCount, class: '' });
+        }
+        dayCount++;
+      }
+      calendar.push(weekRow);
+    }
+
+    this.calendar = calendar;
+  },
+  prevMonth() {
+    if (this.currentMonth === 0) {
+      this.currentMonth = 11;
+      this.currentYear--;
+    } else {
+      this.currentMonth--;
+    }
+    this.generateCalendar();
+  },
+
+  nextMonth() {
+    if (this.currentMonth === 11) {
+      this.currentMonth = 0;
+      this.currentYear++;
+    } else {
+      this.currentMonth++;
+    }
+    this.generateCalendar();
+  },
    async signOut() {
   try {
     if (!this.userData?.id) {
       alert("User ID not found. Please log in again.");
       return;
     }
+
     const response = await api.put(`/attendance/signout/${this.userData.id}`);
 
     this.signOutTime = response.data.check_out_time;
     this.isSignedIn = false;
-    this.showModal=false;
-    
-    localStorage.setItem(`checkOutTime_${this.userData.id}`, this.signOutTime);
+    this.showModal = false;
 
-    alert('Sign out successful');
+    localStorage.setItem(`checkOutTime_${this.userData.id}`, this.signOutTime);
+    localStorage.setItem("isSignedIn", "false");
+    this.attendanceStatus = response.data.status;
+
+    alert(`Sign out successful. Status: ${this.attendanceStatus}, Total Hours: ${response.data.total_working_time}`);
   } catch (error) {
     console.error('Sign out failed:', error.response?.data || error.message);
     alert(error.response?.data?.message || 'Sign out failed. Please try again.');

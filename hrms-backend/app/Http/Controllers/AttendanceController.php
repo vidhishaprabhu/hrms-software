@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Attendance;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class AttendanceController extends Controller
 {
@@ -16,9 +17,8 @@ class AttendanceController extends Controller
              ->value('check_in');
 
 
-return response()->json($checkIn);
-
-}
+    return response()->json($checkIn);
+    }
 
 
     public function destroy($id){
@@ -28,7 +28,6 @@ return response()->json($checkIn);
     }
 public function store(Request $request)
 {
-    $userId = auth()->id(); // or $request->user_id if you're passing it manually
 
    $userId = auth()->id(); // logged-in user ID
     $today = now()->toDateString(); // 'YYYY-MM-DD'
@@ -43,7 +42,7 @@ public function store(Request $request)
     //         'message' => 'You have already checked in today.',
     //     ], 400);
     // }
-
+    
     // Store new attendance record
     $attendance = new Attendance();
     $attendance->user_id = $userId;
@@ -67,14 +66,31 @@ public function signOutByUserId($userId)
     }
 
     $attendance->check_out = now();
+
+    // Ensure Carbon instances
+    $checkInTime = Carbon::parse($attendance->check_in);
+    $checkOutTime = Carbon::parse($attendance->check_out);
+
+    // Calculate duration
+    $durationHours = $checkInTime->diffInHours($checkOutTime);
+
+    // Mark status
+    $attendance->status = $durationHours >= 8 ? 'Present' : 'Absent';
     $attendance->save();
 
     return response()->json([
         'message' => 'Sign out successful',
         'attendance_id' => $attendance->id,
-        'check_out_time' => $attendance->check_out->toDateTimeString(),
+        'check_in_time' => $checkInTime->toDateTimeString(),
+        'check_out_time' => $checkOutTime->toDateTimeString(),
+        'total_working_time' => sprintf('%02d', $durationHours),
+        'status' => $attendance->status
     ]);
 }
+
+
+
+
 
 
 

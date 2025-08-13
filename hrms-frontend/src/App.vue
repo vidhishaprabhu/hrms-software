@@ -32,7 +32,7 @@
       <router-view />
     </div>
   </div>
-  <footer class="footer">© HR Management System designed by <span class="designer-name">Vidisha Prabhu B</span></footer>
+  <footer class="footer">2025 © HR Management System designed by <span class="designer-name">Vidisha Prabhu B</span></footer>
 </div>
 </template>
 

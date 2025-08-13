@@ -45,4 +45,5 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/apply-holiday', [RestrictedHolidayApplicationController::class, 'store']);
     Route::post('/attendance', [AttendanceController::class, 'store']);
     Route::put('/attendance/signout/{userId}', [AttendanceController::class, 'signOutByUserId']);
+    Route::get('/attendance/status', [AttendanceController::class, 'status']);
 });
