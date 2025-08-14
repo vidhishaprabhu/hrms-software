@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -15,7 +16,20 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
+        $schedule->call(function () {
+        DB::table('leave_balances')->increment('annual_leave', 1);
+        })->monthlyOn(1,'00:00');
+
+        // Every month — reset Work From Home to 5
+        $schedule->call(function () {
+        DB::table('leave_balances')->update(['work_from_home' => 5]);
+        })->monthlyOn(1, '00:05');
+
+        // Every year — reset Bereavement Leave to 5
+        $schedule->call(function () {
+        DB::table('leave_balances')->update(['bereavement_leave' => 5]);
+        })->yearlyOn(1, 1, '00:10');
+        
     }
 
     /**

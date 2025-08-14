@@ -46,4 +46,5 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/attendance', [AttendanceController::class, 'store']);
     Route::put('/attendance/signout/{userId}', [AttendanceController::class, 'signOutByUserId']);
     Route::get('/attendance/status', [AttendanceController::class, 'status']);
+    Route::get('/attendance/summary/{userId}', [AttendanceController::class, 'getUserAttendanceSummary']);
 });

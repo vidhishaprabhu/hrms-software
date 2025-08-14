@@ -136,7 +136,22 @@ export default {
     left: 0;
     width: 100%;
     letter-spacing: 0.5px;
+    margin-top: 5%; /* will not work unless position is static/relative */
+    position: relative;
   }
+  html, body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1; /* Pushes footer down */
+}
 
   .designer-name {
     font-weight: bold;

@@ -155,19 +155,19 @@
       <div class="leave-item">
         <span class="leave-name" style="font-size:13px">Present</span>
         <div class="leave-right">
-          <span class="leave-days">5.5</span>
+          <span class="leave-days">{{presentDays}}</span>
         </div>
       </div>
       <div class="leave-item">
         <span class="leave-name" style="font-size:13px">Absent</span>
         <div class="leave-right">
-          <span class="leave-days">5.5</span>
+          <span class="leave-days">{{absentDays}}</span>
         </div>
       </div>
       <div class="leave-item">
         <span class="leave-name" style="font-size:13px">Leave</span>
         <div class="leave-right">
-          <span class="leave-days">5.5</span>
+          <span class="leave-days"></span>
         </div>
       </div>
     </div>
@@ -233,6 +233,8 @@ export default {
   },
   data() {
     return {
+      absentDays:'',
+      presentDays: '',
     workinghours: '',
       currentTime:'',
       isSignedIn: false,
@@ -317,6 +319,7 @@ export default {
   this.startClock();
   this.generateCalendar();
   this.fetchHolidays();
+  this.fetchAttendanceSummary();
 },
   beforeUnmount() {
   clearInterval(this.timer); // prevent memory leaks
@@ -346,9 +349,18 @@ export default {
 //     this.checkin = '--:--';
 //   }
 // },
+async fetchAttendanceSummary() {
+  try {
+    const response = await api.get(`/attendance/summary/${this.userData.id}`);
+    this.presentDays = response.data.presentDays;
+    this.absentDays = response.data.absentDays;
+  } catch (error) {
+    console.error('Failed to fetch summary', error);
+  }
+},
 async checkSignInStatus() {
     try {
-      const response = await api.get('/attendance/status'); // Laravel route for status()
+      const response = await api.get('/attendance/status'); 
       this.isSignedIn = response.data.isSignedIn;
     } catch (error) {
       console.error(error);
@@ -520,23 +532,17 @@ async checkIn() {
 
 <style scoped>
 
-.dashboard-cards {
-    display: flex;
-    gap: 20px;
-    justify-content: center;
-    flex-wrap: wrap; /* Makes them wrap on small screens */
-    padding: 20px;
-  }
-
   .card {
     background: white;
     border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 9px 8px rgba(0,0,0,0.05);
     width: 300px;
     padding: 15px;
     display: flex;
     flex-direction: column;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background: linear-gradient(135deg, #E0F7FA, #F1F8FE);
+
   }
 
   .card:hover {
@@ -606,6 +612,45 @@ async checkIn() {
 
 .leave-days {
   color: #0077B6;
+}
+.calendar-table {
+  border-collapse: collapse;
+  width: 100%;
+  text-align: center;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.calendar-table th {
+  background-color: #0077B6; /* deep blue header */
+  color: white;
+  padding: 8px;
+}
+
+.calendar-table td {
+  padding: 10px;
+  border: 1px solid #dee2e6;
+  background-color: #f8f9fa; /* light background for normal days */
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.calendar-table td:hover {
+  background-color: #D0EFFF; /* light blue hover */
+}
+
+/* Highlight today */
+.calendar-table td.today {
+  background-color: #90E0EF; /* soft cyan */
+  font-weight: bold;
+  color: #023E8A;
+  border-radius: 4px;
+}
+
+/* Highlight selected date */
+.calendar-table td.selected {
+  background-color: #00B4D8; /* bright blue */
+  color: white;
+  font-weight: bold;
 }
 
 </style>

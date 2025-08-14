@@ -87,6 +87,24 @@ public function signOutByUserId($userId)
         'status' => $attendance->status
     ]);
 }
+public function getUserAttendanceSummary($userId)
+{
+    $presentDays = Attendance::where('user_id', $userId)
+        ->where('status', 'Present')
+        ->whereRaw('TIMESTAMPDIFF(HOUR, check_in, check_out) >= 1')
+        ->count();
+
+    $absentDays = Attendance::where('user_id', $userId)
+        ->where('status', 'Absent')
+        ->count();
+
+    return response()->json([
+        'presentDays' => $presentDays,
+        'absentDays' => $absentDays
+    ]);
+}
+
+
 
 
 

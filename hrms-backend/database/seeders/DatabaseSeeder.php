@@ -6,6 +6,7 @@ use Illuminate\Database\Seeder;
 use Database\Seeders\LeaveSeeder;
 use Database\Seeders\EmployeeSeeder;
 use Database\Seeders\AttendanceSeeder;
+use Database\Seeders\LeaveBalanceSeeder;
 use Database\Seeders\RolePermissionSeeder;
 
 class DatabaseSeeder extends Seeder
@@ -21,7 +22,8 @@ class DatabaseSeeder extends Seeder
         EmployeeSeeder::class,
         LeaveSeeder::class, 
         AttendanceSeeder::class,
-        RolePermissionSeeder::class
+        RolePermissionSeeder::class,
+        LeaveBalanceSeeder::class,
     ]);
     }
 }
