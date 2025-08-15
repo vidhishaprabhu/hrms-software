@@ -29,7 +29,7 @@ import {
   DollarOutlined,
   ClockCircleOutlined,
   UserAddOutlined,
-  LoginOutlined,
+  LoginOutlined
 } from '@ant-design/icons-vue';
 
 export default {
@@ -47,42 +47,61 @@ export default {
   data() {
     return {
       navItems: [
-        { name: 'Admin Dashboard', route: '/', icon: 'DashboardOutlined' },
-        { name: 'Employee Dashboard', route: '/', icon: 'DashboardOutlined' },
+        { name: 'Admin Dashboard', route: '/admin-dashboard', icon: 'DashboardOutlined', roles: ['admin', 'hr'] },
+        { name: 'Employee Dashboard', route: '/employee-dashboard', icon: 'DashboardOutlined', roles: ['employee', 'user'] },
         { name: 'Attendance', route: '/attendance', icon: 'CalendarOutlined' },
         { name: 'Leave', route: '/leave', icon: 'LogoutOutlined' },
-        { name: 'Employee Info', route: '/leave', icon: 'LogoutOutlined' },
+        { name: 'Leave Add', route: '/leave-add', icon: 'LogoutOutlined' },
+        { name: 'Employee Info', route: '/employee-info', icon: 'LogoutOutlined' },
         { name: 'Approval', route: '/approval', icon: 'CheckCircleOutlined' },
         { name: 'Reports', route: '/reports', icon: 'BarChartOutlined' },
         { name: 'Payroll', route: '/payroll', icon: 'DollarOutlined' },
         { name: 'Shift Setup', route: '/shift-setup', icon: 'ClockCircleOutlined' },
-        { name: 'Register', route: '/register', icon: 'UserAddOutlined' },
-        { name: 'Login', route: '/', icon: 'LoginOutlined' }
+        { name: 'Register', route: '/register', icon: 'UserAddOutlined', loggedIn: false },
+        { name: 'Login', route: '/', icon: 'LoginOutlined', loggedIn: false },
+        { name: 'Logout', route: '/logout', icon: 'LogoutOutlined', loggedIn: true }
       ]
     };
   },
   computed: {
-  navItemsWithIcons() {
-    return this.navItems.map(item => ({
-      ...item,
-      icon: this.$options.components[item.icon]
-    }));
+    isAuthenticated() {
+      // Check if the user is authenticated by looking for a token in local storage
+      return localStorage.getItem('api-token') !== null;
+    },
+    filteredNavItems() {
+      const userRole = localStorage.getItem('user-role');
+      const isAuthenticated = this.isAuthenticated;
+
+      return this.navItems.filter(item => {
+        // Handle login/register vs. authenticated links
+        if (item.loggedIn !== undefined) {
+          if (item.loggedIn && !isAuthenticated) {
+            return false;
+          }
+          if (!item.loggedIn && isAuthenticated) {
+            return false;
+          }
+        }
+
+        // Handle role-based access for dashboard items
+        if ((item.name === 'Admin Dashboard' && item.name === 'Attendance' && item.name==='Leave Add') ) {
+          // Check if the user's role is included in the item's allowed roles
+          return item.roles && item.roles.includes(userRole);
+        }
+        
+        // Show all other links by default for authenticated users
+        return isAuthenticated; 
+      });
+    }
   },
-  filteredNavItems() {
-    const role = localStorage.getItem('role');
-
-    return this.navItemsWithIcons.filter(item => {
-      if (item.name === 'Admin Dashboard') {
-        return role === 'admin' || role === 'hr';
-      }
-      if (item.name === 'Employee Dashboard') {
-        return role === 'employee';
-      }
-      return true;
-    });
+  methods: {
+    // You might also need a method to handle the logout logic
+    logout() {
+      localStorage.removeItem('api-token');
+      localStorage.removeItem('user-role');
+      window.location.href = '/'; // Redirect to the login page
+    }
   }
-}
-
 };
 </script>
 

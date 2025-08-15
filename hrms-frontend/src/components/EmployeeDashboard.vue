@@ -5,7 +5,6 @@
     <!-- Sign In Card -->
     <div class="col-md-4">
       <div class="card shadow-sm rounded-4 text-center p-3 h-100" style="margin-left: 20px;">
-        <!-- <span>Time {{workinghours}}</span> -->
         <div style="display: flex; align-items: center;">
   <h5>Employee Sign In</h5>
   <i class="bi bi-box-arrow-in-right" 
@@ -124,29 +123,30 @@
       </div>
     </div>
     <div class="col-md-4">
-      <div class="card shadow-sm rounded-4 p-3 text-center h-100">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-  <button @click="prevMonth" style="border:none; background:none; padding:0; cursor:pointer;"><LeftOutlined style="font-size: 20px; color: black;" /></button>
-  <h4>{{ new Date(currentYear, currentMonth).toLocaleString('default', { month: 'long', year: 'numeric' }) }}</h4>
-  <button @click="nextMonth" style="border:none; background:none; padding:0; cursor:pointer;">
-  <RightOutlined style="font-size: 20px; color: black;" />
-</button>
-
-</div>
-        <table class="table table-bordered calendar-table">
-          <thead>
-            <tr>
-              <th v-for="day in ['S','M','T','W','T','F','S']" :key="day">{{ day }}</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="(week, wIndex) in calendar" :key="wIndex">
-              <td v-for="(day, dIndex) in week" :key="dIndex" :class="day.class">{{ day.date }}</td>
-            </tr>
-          </tbody>
-        </table>
+    <div class="card shadow-sm rounded-4 p-3 text-center h-100">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <button @click="prevMonth" style="border:none; background:none; padding:0; cursor:pointer;"><LeftOutlined style="font-size: 20px; color: black;" /></button>
+        <h4>{{ new Date(currentYear, currentMonth).toLocaleString('default', { month: 'long', year: 'numeric' }) }}</h4>
+        <button @click="nextMonth" style="border:none; background:none; padding:0; cursor:pointer;">
+          <RightOutlined style="font-size: 20px; color: black;" />
+        </button>
       </div>
+      <table class="table table-bordered calendar-table">
+        <thead>
+          <tr>
+            <th v-for="day in ['S','M','T','W','T','F','S']" :key="day">{{ day }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(week, wIndex) in calendar" :key="wIndex">
+            <td v-for="(day, dIndex) in week" :key="dIndex">
+              <span :class="day.class" :title="day.title">{{ day.date }}</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
+  </div>
     <div class="col-md-4">
   <div class="card shadow-sm rounded-4 p-3 text-center h-100">
     <h5 class="text-center">Attendance Monthly</h5>
@@ -432,27 +432,32 @@ async checkIn() {
     console.log('tick ->', this.currentTime);
   },
     generateCalendar() {
-    const daysInMonth = new Date(this.currentYear, this.currentMonth + 1, 0).getDate();
-    const firstDay = new Date(this.currentYear, this.currentMonth, 1).getDay();
-    
-    const calendar = [];
-    let dayCount = 1 - firstDay;
+      const daysInMonth = new Date(this.currentYear, this.currentMonth + 1, 0).getDate();
+      const firstDay = new Date(this.currentYear, this.currentMonth, 1).getDay();
 
-    for (let week = 0; week < 6; week++) {
-      const weekRow = [];
-      for (let day = 0; day < 7; day++) {
-        if (dayCount < 1 || dayCount > daysInMonth) {
-          weekRow.push({ date: '' });
-        } else {
-          weekRow.push({ date: dayCount, class: '' });
+      const calendar = [];
+      let dayCount = 1 - firstDay;
+
+      for (let week = 0; week < 6; week++) {
+        const weekRow = [];
+        for (let day = 0; day < 7; day++) {
+          const isWeekend = day === 0 || day === 6; // 0 = Sunday, 6 = Saturday
+
+          if (dayCount < 1 || dayCount > daysInMonth) {
+            weekRow.push({ date: '', class: '' });
+          } else {
+            weekRow.push({
+              date: dayCount,
+              class: isWeekend ? 'weekend' : '',
+              title: isWeekend ? 'Week off' : ''
+            });
+          }
+          dayCount++;
         }
-        dayCount++;
+        calendar.push(weekRow);
       }
-      calendar.push(weekRow);
-    }
-
-    this.calendar = calendar;
-  },
+      this.calendar = calendar;
+    },
   prevMonth() {
     if (this.currentMonth === 0) {
       this.currentMonth = 11;
@@ -608,43 +613,43 @@ async checkIn() {
   color: #0077B6;
 }
 .calendar-table {
-  border-collapse: collapse;
   width: 100%;
-  text-align: center;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  border-collapse: separate;
+  border-spacing: 0;
 }
 
-.calendar-table th {
-  background-color: #0077B6; /* deep blue header */
-  color: white;
-  padding: 8px;
-}
-
+.calendar-table th,
 .calendar-table td {
-  padding: 10px;
-  border: 1px solid #dee2e6;
-  background-color: #f8f9fa; /* light background for normal days */
+  padding: 8px;
+  text-align: center;
+  border: none;
+}
+
+/* Style the day names */
+.calendar-table thead th {
+  font-weight: bold;
+}
+
+/* Apply weekend styling to the span inside the table cell */
+td span.weekend {
+  background-color: #b8bdc1; /* Yellow color */
+  border-radius: 50%;
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  line-height: 30px;
+  color: #333;
   cursor: pointer;
-  transition: background 0.2s ease;
 }
 
-.calendar-table td:hover {
-  background-color: #D0EFFF; /* light blue hover */
+/* Style for other highlighted days (light green) */
+td span.highlight {
+  background-color: #a5d6a7; /* Light green color */
+  border-radius: 50%;
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  line-height: 30px;
+  color: #333;
 }
-
-/* Highlight today */
-.calendar-table td.today {
-  background-color: #90E0EF; /* soft cyan */
-  font-weight: bold;
-  color: #023E8A;
-  border-radius: 4px;
-}
-
-/* Highlight selected date */
-.calendar-table td.selected {
-  background-color: #00B4D8; /* bright blue */
-  color: white;
-  font-weight: bold;
-}
-
 </style>

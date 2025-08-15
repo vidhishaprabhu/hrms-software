@@ -4,12 +4,14 @@ import DashboardPage from '../components/DashboardPage.vue'
 import AttendancePage from '../components/AttendancePage.vue'
 import LoginPage from '../components/LoginPage.vue'
 import EmployeeDashboard from '../components/EmployeeDashboard.vue'
+import AddLeave from '../components/AddLeave.vue';
 const routes = [
   { path: '/register', name: 'RegisterPage', component: RegisterPage },
   { path: '/admin-dashboard', name: 'DashboardPage', component: DashboardPage,meta: { requiresAuth: true, role: 'admin' } },
   { path: '/attendance', name: 'AttendancePage', component: AttendancePage,meta: { requiresAuth: true, role: 'admin' } },
   { path: '/', name: 'LoginPage', component: LoginPage },
   { path: '/employee-dashboard', name: 'EmployeeDashboard', component: EmployeeDashboard,meta: { requiresAuth: true, role: 'employee' } },
+  { path: '/leave-add', name: 'AddLeave', component: AddLeave,meta: { requiresAuth: true, role: 'admin' } },
 ]
 
 const router = createRouter({

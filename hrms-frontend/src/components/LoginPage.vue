@@ -6,24 +6,34 @@
           <h2 class="text-center mb-4" style="color:#0077B6">Login</h2>
           <form @submit.prevent="register" >
             <div class="mb-3" >
-              <input 
-                type="email" 
-                class="form-control" 
-                placeholder="Enter your email" 
+              <input
+                type="email"
+                class="form-control"
+                placeholder="Enter your email"
                 v-model="email"
               />
             </div>
             <div class="mb-3">
-              <input 
-                type="password" 
-                class="form-control" 
-                placeholder="Enter your password" 
+              <input
+                :type="passwordFieldType"
+                class="form-control"
+                placeholder="Enter your password"
                 v-model="password"
               />
             </div>
-            <button 
-              type="submit" 
-              class="btn w-100" 
+            <div class="flex items-center mb-10">
+              <input
+                type="checkbox"
+                id="show-password"
+                class="rounded text-blue-600 focus:ring-blue-500 mr-2"
+                @change="togglePasswordVisibility"
+              >
+              <label for="show-password" class="text-gray-700 font-medium">Show password</label>
+            </div>
+
+            <button
+              type="submit"
+              class="btn w-100"
               style="background-color:#0077B6;color:white;border:1px solid blue"
               @click="login"
             >Login</button>
@@ -32,7 +42,7 @@
           </form>
         </div>
         <p class="text-center mt-4 fw-bold fs-5" style="font-family:italic">
-          Don't have an account ? 
+          Don't have an account ?
           <router-link to="/register" style="color:#0077B6">Register</router-link>
         </p>
       </div>
@@ -52,6 +62,7 @@ export default {
       error: '',
       message: '',
       role: '',
+      passwordFieldType: 'password', // New data property to control input type
     };
   },
   methods: {
@@ -92,6 +103,10 @@ export default {
           this.error = 'Login Failed !!. Please Try Again.';
         }
       }
+    },
+    // New method to toggle password visibility
+    togglePasswordVisibility() {
+      this.passwordFieldType = this.passwordFieldType === 'password' ? 'text' : 'password';
     }
   }
 };
