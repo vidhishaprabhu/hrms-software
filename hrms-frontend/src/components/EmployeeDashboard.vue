@@ -181,7 +181,7 @@
       <div class="leave-item">
         <span class="leave-name" style="font-size:13px">Bereavement Leave</span>
         <div class="leave-right">
-          <span class="leave-days">5.5</span>
+          <span class="leave-days">{{leaveBalanceDatas}}</span>
           <a href="#">Apply</a>
         </div>
       </div>
@@ -233,9 +233,10 @@ export default {
   },
   data() {
     return {
+      leaveBalanceData:{},
       absentDays:'',
       presentDays: '',
-    workinghours: '',
+      workinghours: '',
       currentTime:'',
       isSignedIn: false,
       checkin: null,
@@ -313,7 +314,7 @@ export default {
 
   // 2. Verify with backend (final authority)
   await this.checkSignInStatus();
-
+  this.fetchLeaveBalanceData();
   // 3. Continue as usual
   this.fetchEmployeeData();
   this.startClock();
@@ -331,24 +332,17 @@ export default {
     this.employeeId = localStorage.getItem('employeeId');
   },
   methods: {
-    // async markAbsent() {
-    //   try {
-    //     const response = await api.post('/attendance/mark-absent');
-    //     this.message = response.data;
-    //   } catch (error) {
-    //     console.error('Error marking absent:', error);
-    //     this.message = 'Failed to mark absentees.';
-    //   }
-    // },
-//     async fetchCheckIn() {
-//   try {
-//     const response = await api.get('/attendance');
-//     this.checkin= response.data.checkInTime; 
-//     } catch (error) {
-//     console.error('Error fetching check-in time:', error);
-//     this.checkin = '--:--';
-//   }
-// },
+    async fetchLeaveBalanceData()
+    {
+      try {
+        const response = await api.get('/leave-balances');
+        this.leaveBalanceData = response.data;
+      } catch (error) {
+        console.error('Error fetching leave balance data:', error);
+      }
+
+    },
+    
 async fetchAttendanceSummary() {
   try {
     const response = await api.get(`/attendance/summary/${this.userData.id}`);

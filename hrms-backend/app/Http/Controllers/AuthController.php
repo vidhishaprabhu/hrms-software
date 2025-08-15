@@ -5,47 +5,50 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Validator;
+
 class AuthController extends Controller
 {
-    public function register(Request $request){
+    public function register(Request $request)
+    {
         $validator = Validator::make($request->all(), [
-        'name' => 'required|string',
-        'email' => 'required|email',
-        'password' => 'required|min:6',
-        'role' => 'required|in:admin,user,hr,employee'
- 
-    ]);
+            'name' => 'required|string',
+            'email' => 'required|email',
+            'password' => 'required|min:6',
+            'role' => 'required|in:admin,user,hr,employee'
+        ]);
 
-    if ($validator->fails()) {
-        return response()->json(['errors' => $validator->errors()], 422);
-    }
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
 
-    // 🔍 Check manually for duplicates
-    if (User::where('email', $request->email)->exists()) {
+        // 🔍 Check manually for duplicates
+        if (User::where('email', $request->email)->exists()) {
+            return response()->json([
+                'errors' => ['email' => ['This email is already registered.']]
+            ], 422);
+        }
+
+        if (User::where('name', $request->name)->exists()) {
+            return response()->json([
+                'errors' => ['name' => ['This name is already registered.']]
+            ], 422);
+        }
+
+        // ✅ Create new user with role
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => bcrypt($request->password),
+            'role' => $request->role, 
+        ]);
+        event(new Registered($user));
+
         return response()->json([
-            'errors' => ['email' => ['This email is already registered.']]
-        ], 422);
-    }
-
-    if (User::where('name', $request->name)->exists()) {
-        return response()->json([
-            'errors' => ['name' => ['This name is already registered.']]
-        ], 422);
-    }
-
-    // ✅ Create new user with role
-    $user = User::create([
-        'name' => $request->name,
-        'email' => $request->email,
-        'password' => bcrypt($request->password),
-        'role' => $request->role, 
-    ]);
-
-    return response()->json([
-        'message' => 'User registered successfully',
-        'user' => $user
-    ]);
+            'message' => 'User registered successfully',
+            'user' => $user
+        ]);
     }
     public function login(Request $request){
         $request->validate([

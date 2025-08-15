@@ -7,6 +7,7 @@ use App\Http\Controllers\LeaveController;
 use App\Http\Controllers\HolidayController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\AttendanceController;
+use App\Http\Controllers\LeaveBalanceController;
 use App\Http\Controllers\RestrictedHolidayApplicationController;
 
 /*
@@ -47,4 +48,5 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::put('/attendance/signout/{userId}', [AttendanceController::class, 'signOutByUserId']);
     Route::get('/attendance/status', [AttendanceController::class, 'status']);
     Route::get('/attendance/summary/{userId}', [AttendanceController::class, 'getUserAttendanceSummary']);
+    Route::get('/leave-balances', [LeaveBalanceController::class, 'index']);
 });

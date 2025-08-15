@@ -51,6 +51,7 @@ export default {
         { name: 'Employee Dashboard', route: '/', icon: 'DashboardOutlined' },
         { name: 'Attendance', route: '/attendance', icon: 'CalendarOutlined' },
         { name: 'Leave', route: '/leave', icon: 'LogoutOutlined' },
+        { name: 'Employee Info', route: '/leave', icon: 'LogoutOutlined' },
         { name: 'Approval', route: '/approval', icon: 'CheckCircleOutlined' },
         { name: 'Reports', route: '/reports', icon: 'BarChartOutlined' },
         { name: 'Payroll', route: '/payroll', icon: 'DollarOutlined' },

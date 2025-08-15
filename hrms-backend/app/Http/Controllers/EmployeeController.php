@@ -27,7 +27,6 @@ class EmployeeController extends Controller
         return response()->json([
             'new_joinees' => $newJoinees
         ]);
-
     }
 
 }
