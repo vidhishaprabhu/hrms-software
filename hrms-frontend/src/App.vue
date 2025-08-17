@@ -8,17 +8,18 @@
     <div class="d-flex align-items-center">
       <img :src="require('@/assets/hrms-logo.png')" alt="Logo" style="height: 40px; margin-right: 10px;" />
     </div>
-
-    <!-- Show this only when not on login/register -->
+    <div class="text-white ml-8" style="padding-left:15%">Welcome, {{ userData.name }}</div>
+    <BellOutlined style="color:white; font-size: 20px;padding-left:15%;padding-right:3%" />
+    <div class="text-white">Month: {{ currentMonthYear }}</div>
     <template v-if="showNavbarContent">
-      <div class="text-white">Month: {{ currentMonthYear }}</div>
-      <div class="d-flex justify-content-end align-items-center gap-3">
-        <div class="text-white">Welcome, {{userData.name}}</div>
-        <button class="btn btn-danger d-flex align-items-center gap-2" style="border: none;" @click="logout">
-          <PoweroffOutlined />
-          Logout
-        </button>
-      </div>
+      <div class="d-flex justify-content-between align-items-center">
+    <div class="d-flex align-items-center gap-14">
+      <button class="btn btn-danger d-flex align-items-center gap-2" style="border: none;" @click="logout">
+        <PoweroffOutlined />
+        Logout
+      </button>
+    </div>
+  </div>
     </template>
 
   </div>
@@ -39,14 +40,16 @@
 <script>
 import SidebarPage from './components/SidebarPage.vue';
 import {
-  PoweroffOutlined
+  PoweroffOutlined,
+   BellOutlined 
 } from '@ant-design/icons-vue';
 import api from './api'; 
 export default {
   name: 'App',
   components: {
     SidebarPage,
-    PoweroffOutlined
+    PoweroffOutlined,
+     BellOutlined 
   },
   data() {
     return {

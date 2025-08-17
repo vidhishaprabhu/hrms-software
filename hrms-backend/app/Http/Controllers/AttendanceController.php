@@ -75,7 +75,7 @@ public function signOutByUserId($userId)
     $durationHours = $checkInTime->diffInHours($checkOutTime);
 
     // Mark status
-    $attendance->status = $durationHours >= 8 ? 'Present' : 'Absent';
+    $attendance->status = $durationHours >= 1 ? 'Present' : 'Absent';
     $attendance->save();
 
     return response()->json([

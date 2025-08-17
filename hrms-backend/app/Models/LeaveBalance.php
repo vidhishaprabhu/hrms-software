@@ -11,7 +11,6 @@ class LeaveBalance extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'user_id',
         'employee_id',
         'bereavement_leave',
         'annual_leave',

@@ -2,27 +2,65 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Leave;
+use App\Models\Employee;
+use App\Models\LeaveBalance;
 use Illuminate\Http\Request;
 
 class LeaveBalanceController extends Controller
 {
-    public function index(Request $request){
-        $user = $request->user();
+   public function index()
+{
+     $userId = auth()->id();
 
-        // Eager load the employee and leaveBalance relationships
-        $user->load('employee.leaveBalance');
+    $employee = Employee::where('user_id', $userId)->first();
 
-        // Check if the user has a linked employee and leave balance
-        if (!$user->employee || !$user->employee->leaveBalance) {
-            return response()->json(['message' => 'No leave balances found for this user.'], 404);
-        }
-
-        // Return the specific leave balance attributes
+    if (!$employee) {
         return response()->json([
-            'bereavement_leave' => $user->employee->leaveBalance->bereavement_leave,
-            'annual_leave' => $user->employee->leaveBalance->annual_leave,
-            'restricted_holiday' => $user->employee->leaveBalance->restricted_holiday,
-            'work_from_home' => $user->employee->leaveBalance->work_from_home,
+            'message' => 'Employee record not found for this user.'
+        ], 404);
+    }
+    $leaveBalance = LeaveBalance::where('employee_id', $employee->id)->first();
+
+    if (!$leaveBalance) {
+        return response()->json([
+            'message' => 'No leave balance found for this employee.'
+        ], 404);
+    }
+
+    return response()->json([
+        'employee_id'   => $employee->id,
+        'leave_balance' => $leaveBalance
+    ]);
+}
+
+
+
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+        'employee_id' => 'required|string|exists:employees,employee_id',
+        'bereavement_leave' => 'required|integer|min:0',
+        'annual_leave' => 'required|integer|min:0',
+        'restricted_holiday' => 'required|integer|min:0',
+        'work_from_home' => 'required|integer|min:0',
+        ]);
+
+        $employee = Employee::where('employee_id', $validated['employee_id'])->first();
+
+        $leave = LeaveBalance::updateOrCreate(
+        ['employee_id' => $employee->id],
+        [
+            'bereavement_leave' => $validated['bereavement_leave'],
+            'annual_leave' => $validated['annual_leave'],
+            'restricted_holiday' => $validated['restricted_holiday'],
+            'work_from_home' => $validated['work_from_home'],
+        ]
+        );
+
+        return response()->json([
+        'message' => 'Leave allocation saved successfully',
+        'data' => $leave
         ]);
     }
 

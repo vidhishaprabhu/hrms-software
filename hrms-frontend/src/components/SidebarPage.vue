@@ -29,7 +29,8 @@ import {
   DollarOutlined,
   ClockCircleOutlined,
   UserAddOutlined,
-  LoginOutlined
+  LoginOutlined,
+ PlusOutlined
 } from '@ant-design/icons-vue';
 
 export default {
@@ -42,7 +43,8 @@ export default {
     DollarOutlined,
     ClockCircleOutlined,
     UserAddOutlined,
-    LoginOutlined
+    LoginOutlined,
+    PlusOutlined
   },
   data() {
     return {
@@ -51,7 +53,7 @@ export default {
         { name: 'Employee Dashboard', route: '/employee-dashboard', icon: 'DashboardOutlined', roles: ['employee', 'user'] },
         { name: 'Attendance', route: '/attendance', icon: 'CalendarOutlined' },
         { name: 'Leave', route: '/leave', icon: 'LogoutOutlined' },
-        { name: 'Leave Add', route: '/leave-add', icon: 'LogoutOutlined' },
+        { name: 'Leave Add', route: '/leave-add', icon: 'PlusOutlined' },
         { name: 'Employee Info', route: '/employee-info', icon: 'LogoutOutlined' },
         { name: 'Approval', route: '/approval', icon: 'CheckCircleOutlined' },
         { name: 'Reports', route: '/reports', icon: 'BarChartOutlined' },

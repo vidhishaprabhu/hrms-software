@@ -40,6 +40,9 @@ Route::put('/holiday/{id}', [HolidayController::class, 'updateHoliday']);
 Route::delete('/holiday/{id}', [HolidayController::class, 'destroy']);
 Route::get('/employees', [EmployeeController::class, 'index']);
 Route::post('/add-holiday', [HolidayController::class, 'store']);
+Route::post('/leaves', [LeaveBalanceController::class, 'store']);
+
+
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/user', [AuthController::class, 'user']);
     Route::post('/logout', [AuthController::class, 'logout']);
@@ -48,5 +51,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::put('/attendance/signout/{userId}', [AttendanceController::class, 'signOutByUserId']);
     Route::get('/attendance/status', [AttendanceController::class, 'status']);
     Route::get('/attendance/summary/{userId}', [AttendanceController::class, 'getUserAttendanceSummary']);
+    // Route::get('/leave-balances', [LeaveBalanceController::class, 'index']);
     Route::get('/leave-balances', [LeaveBalanceController::class, 'index']);
+   
+
+
 });

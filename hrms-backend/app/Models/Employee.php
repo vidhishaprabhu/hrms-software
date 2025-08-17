@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\LeaveBalance;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Employee extends Model
 {
@@ -25,4 +26,9 @@ class Employee extends Model
     {
         return $this->belongsTo(User::class);
     }
+    public function leaveBalance()
+    {
+        return $this->hasOne(LeaveBalance::class);
+    }
+
 }
