@@ -31,7 +31,7 @@ router.beforeEach((to, from, next) => {
       // Only block if both roles exist and they don't match (case-insensitive)
       if (to.meta.role && userRole && to.meta.role.toLowerCase() !== userRole.toLowerCase()) {
         alert('Access Denied: Unauthorized Role');
-        next('/');
+        next('/employee-dashboard');
       } else {
         next();
       }

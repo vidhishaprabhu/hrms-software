@@ -15,7 +15,7 @@
 
         <button
   class="btn my-2 d-flex align-items-center justify-content-center mx-auto"
-  @click="showModal = true" style="background-color: #0077B6; color: white;width:65%"
+  @click="handleSignInOut" style="background-color: #0077B6; color: white;width:65%"
 >
   <i class="bi bi-fingerprint me-2"></i>
   {{ isSignedIn ? 'Sign Out' : 'Sign In' }}
@@ -181,28 +181,28 @@
       <div class="leave-item">
         <span class="leave-name" style="font-size:13px">Bereavement Leave</span>
         <div class="leave-right">
-          <span class="leave-days">{{leaveBalanceDatas}}</span>
+          <span class="leave-days">{{ leaveBalanceData?.bereavement_leave }}</span>
           <a href="#">Apply</a>
         </div>
       </div>
       <div class="leave-item">
         <span class="leave-name" style="font-size:13px">Annual Leave</span>
         <div class="leave-right">
-          <span class="leave-days">5</span>
+          <span class="leave-days">{{ leaveBalanceData?.annual_leave }}</span>
           <a href="#">Apply</a>
         </div>
       </div>
       <div class="leave-item">
         <span class="leave-name" style="font-size:13px">Restricted Holiday</span>
         <div class="leave-right">
-          <span class="leave-days">5</span>
+          <span class="leave-days">{{ leaveBalanceData?.restricted_holiday }}</span>
           <a href="#">Apply</a>
         </div>
       </div>
       <div class="leave-item">
         <span class="leave-name" style="font-size:13px">Work from Home</span>
         <div class="leave-right">
-          <span class="leave-days">5</span>
+          <span class="leave-days">{{ leaveBalanceData?.work_from_home }}</span>
           <a href="#">Apply</a>
         </div>
       </div>
@@ -233,6 +233,7 @@ export default {
   },
   data() {
     return {
+      employeeId: null,
       leaveBalanceData:{},
       absentDays:'',
       presentDays: '',
@@ -240,9 +241,7 @@ export default {
       currentTime:'',
       isSignedIn: false,
       checkin: null,
-      employeeId: '',
       showModal: false,
-      // signedIn: localStorage.getItem('signedIn') === 'true',
       attendanceId: null,
       location: '',
       remark: '',
@@ -314,8 +313,9 @@ export default {
 
   // 2. Verify with backend (final authority)
   await this.checkSignInStatus();
-  this.fetchLeaveBalanceData();
+  // this.fetchLeaveBalanceData();
   // 3. Continue as usual
+  this.fetchLeaveBalance();
   this.fetchEmployeeData();
   this.startClock();
   this.generateCalendar();
@@ -332,17 +332,33 @@ export default {
     this.employeeId = localStorage.getItem('employeeId');
   },
   methods: {
-    async fetchLeaveBalanceData()
-    {
-      try {
-        const response = await api.get('/leave-balances');
-        this.leaveBalanceData = response.data;
-      } catch (error) {
-        console.error('Error fetching leave balance data:', error);
+    handleSignInOut() {
+      if (!this.isSignedIn) {
+        // Sign In
+        const now = new Date().toISOString();
+        localStorage.setItem(`checkInTime_${this.userData.id}`, now);
+        this.checkin = now;
+        this.signOutTime = null;
+        localStorage.removeItem(`checkOutTime_${this.userData.id}`);
+        this.isSignedIn = true;
+      } else {
+        // Sign Out
+        const now = new Date().toISOString();
+        localStorage.setItem(`checkOutTime_${this.userData.id}`, now);
+        this.signOutTime = now;
+        this.isSignedIn = false;
       }
-
     },
-    
+  async fetchLeaveBalance(){
+  try{
+    const response = await api.get('/leave-balances');
+    this.leaveBalanceData = response.data.leave_balance;
+  }
+  catch(error){
+    console.error('Error in fetching leave balance data:', error.response?.data || error);
+  }
+},
+
 async fetchAttendanceSummary() {
   try {
     const response = await api.get(`/attendance/summary/${this.userData.id}`);
