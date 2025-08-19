@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Leave extends Model
 {
     protected $fillable = [
-        'employee_id',
+        'user_id',
         'leave_type',
         'start_date',
         'end_date',
@@ -16,10 +17,10 @@ class Leave extends Model
         'status',
     ];
 
-    // Define the relationship with Employee
-    public function employee()
+    public function user()
     {
-        return $this->belongsTo(Employee::class);
+        return $this->belongsTo(User::class);
     }
+    
     
 }

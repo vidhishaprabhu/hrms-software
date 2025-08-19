@@ -5,6 +5,7 @@ import AttendancePage from '../components/AttendancePage.vue'
 import LoginPage from '../components/LoginPage.vue'
 import EmployeeDashboard from '../components/EmployeeDashboard.vue'
 import AddLeave from '../components/AddLeave.vue';
+import ApplyLeavePage from '../components/ApplyLeavePage.vue';
 const routes = [
   { path: '/register', name: 'RegisterPage', component: RegisterPage },
   { path: '/admin-dashboard', name: 'DashboardPage', component: DashboardPage,meta: { requiresAuth: true, role: 'admin' } },
@@ -12,6 +13,13 @@ const routes = [
   { path: '/', name: 'LoginPage', component: LoginPage },
   { path: '/employee-dashboard', name: 'EmployeeDashboard', component: EmployeeDashboard,meta: { requiresAuth: true, role: 'employee' } },
   { path: '/leave-add', name: 'AddLeave', component: AddLeave,meta: { requiresAuth: true, role: 'admin' } },
+  {
+    path: '/apply-leave/:type',
+    name: 'apply-leave',
+    component: ApplyLeavePage,
+    props: true,
+    meta: { requiresAuth: true, role: 'employee'}
+  }
 ]
 
 const router = createRouter({
@@ -26,20 +34,28 @@ router.beforeEach((to, from, next) => {
 
   if (to.meta.requiresAuth) {
     if (!token) {
-      next('/');
+      next('/'); // go to login if no token
     } else {
-      // Only block if both roles exist and they don't match (case-insensitive)
       if (to.meta.role && userRole && to.meta.role.toLowerCase() !== userRole.toLowerCase()) {
         alert('Access Denied: Unauthorized Role');
-        next('/employee-dashboard');
+
+        if (userRole.toLowerCase() === 'admin') {
+          next('/admin-dashboard');
+        } else if (userRole.toLowerCase() === 'employee') {
+          next('/employee-dashboard');
+        } else {
+          next('/'); 
+        }
+
       } else {
-        next();
+        next(); // allowed route
       }
     }
   } else {
-    next();
+    next(); // public route
   }
 });
+
 
 
 export default router

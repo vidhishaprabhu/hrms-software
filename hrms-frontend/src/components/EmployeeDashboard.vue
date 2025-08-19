@@ -15,7 +15,7 @@
 
         <button
   class="btn my-2 d-flex align-items-center justify-content-center mx-auto"
-  @click="handleSignInOut" style="background-color: #0077B6; color: white;width:65%"
+  @click="showModal=true" style="background-color: #0077B6; color: white;width:65%"
 >
   <i class="bi bi-fingerprint me-2"></i>
   {{ isSignedIn ? 'Sign Out' : 'Sign In' }}
@@ -33,7 +33,6 @@
 
               <!-- Body -->
               <div class="modal-body">
-                <!-- Location Dropdown -->
                 <div class="mb-3">
                   <label class="form-label">Enter sign in location<span class="text-danger">*</span></label>
                   <select class="form-select" v-model="location">
@@ -59,8 +58,6 @@
 >
                 {{ isSignedIn ? 'Sign Out' : 'Sign In' }}
               </button>
-
-
               </div>
 
             </div>
@@ -182,28 +179,48 @@
         <span class="leave-name" style="font-size:13px">Bereavement Leave</span>
         <div class="leave-right">
           <span class="leave-days">{{ leaveBalanceData?.bereavement_leave }}</span>
-          <a href="#">Apply</a>
+          <router-link 
+      :to="{ name: 'apply-leave', params: { type: 'bereavement' } }" 
+      class="apply-link"
+    >
+      Apply
+    </router-link>
         </div>
       </div>
       <div class="leave-item">
         <span class="leave-name" style="font-size:13px">Annual Leave</span>
         <div class="leave-right">
           <span class="leave-days">{{ leaveBalanceData?.annual_leave }}</span>
-          <a href="#">Apply</a>
+          <router-link 
+      :to="{ name: 'apply-leave', params: { type: 'annual' } }" 
+      class="apply-link"
+    >
+      Apply
+    </router-link>
         </div>
       </div>
       <div class="leave-item">
         <span class="leave-name" style="font-size:13px">Restricted Holiday</span>
         <div class="leave-right">
           <span class="leave-days">{{ leaveBalanceData?.restricted_holiday }}</span>
-          <a href="#">Apply</a>
+          <router-link 
+      :to="{ name: 'apply-leave', params: { type: 'restricted_holiday' } }" 
+      class="apply-link"
+    >
+      Apply
+    </router-link>
         </div>
       </div>
       <div class="leave-item">
         <span class="leave-name" style="font-size:13px">Work from Home</span>
         <div class="leave-right">
           <span class="leave-days">{{ leaveBalanceData?.work_from_home }}</span>
-          <a href="#">Apply</a>
+          <router-link 
+      :to="{ name: 'apply-leave', params: { type: 'work_from_home' } }" 
+      class="apply-link"
+    >
+      Apply
+    </router-link>
         </div>
       </div>
     </div>
@@ -267,22 +284,6 @@ export default {
 
   },
   computed: {
-    
-  //   formattedCheckIn() {
-  //   const checkIn = this.attendanceData.check_in;
-
-  //   // If no check_in value, show placeholder
-  //   if (!checkIn) return '--:--';
-
-  //   // Try to convert to Date object
-  //   const date = new Date(checkIn);
-
-  //   // If date is invalid, show placeholder
-  //   if (isNaN(date.getTime())) return '--:--';
-
-  //   // Format date to hh:mm AM/PM
-  //   return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
-  // },
     holidaysThisMonth() {
       const currentDate = new Date();
       const currentMonth = currentDate.getMonth(); // 0-indexed
@@ -310,11 +311,7 @@ export default {
     this.checkin = localStorage.getItem(`checkInTime_${this.userData.id}`) || null;
     this.signOutTime = localStorage.getItem(`checkOutTime_${this.userData.id}`) || null;
   }
-
-  // 2. Verify with backend (final authority)
   await this.checkSignInStatus();
-  // this.fetchLeaveBalanceData();
-  // 3. Continue as usual
   this.fetchLeaveBalance();
   this.fetchEmployeeData();
   this.startClock();

@@ -30,7 +30,8 @@ import {
   ClockCircleOutlined,
   UserAddOutlined,
   LoginOutlined,
- PlusOutlined
+ PlusOutlined,
+ InfoCircleOutlined
 } from '@ant-design/icons-vue';
 
 export default {
@@ -44,7 +45,8 @@ export default {
     ClockCircleOutlined,
     UserAddOutlined,
     LoginOutlined,
-    PlusOutlined
+    PlusOutlined,
+    InfoCircleOutlined
   },
   data() {
     return {
@@ -52,16 +54,16 @@ export default {
         { name: 'Admin Dashboard', route: '/admin-dashboard', icon: 'DashboardOutlined', roles: ['admin', 'hr'] },
         { name: 'Employee Dashboard', route: '/employee-dashboard', icon: 'DashboardOutlined', roles: ['employee', 'user'] },
         { name: 'Attendance', route: '/attendance', icon: 'CalendarOutlined' },
-        { name: 'Leave', route: '/leave', icon: 'LogoutOutlined' },
+        { name: 'Leave Info', route: '/leave', icon: 'InfoCircleOutlined' },
         { name: 'Leave Add', route: '/leave-add', icon: 'PlusOutlined' },
-        { name: 'Employee Info', route: '/employee-info', icon: 'LogoutOutlined' },
+        { name: 'Employee Info', route: '/employee-info', icon: 'InfoCircleOutlined' },
         { name: 'Approval', route: '/approval', icon: 'CheckCircleOutlined' },
         { name: 'Reports', route: '/reports', icon: 'BarChartOutlined' },
         { name: 'Payroll', route: '/payroll', icon: 'DollarOutlined' },
         { name: 'Shift Setup', route: '/shift-setup', icon: 'ClockCircleOutlined' },
         { name: 'Register', route: '/register', icon: 'UserAddOutlined', loggedIn: false },
         { name: 'Login', route: '/', icon: 'LoginOutlined', loggedIn: false },
-        { name: 'Logout', route: '/logout', icon: 'LogoutOutlined', loggedIn: true }
+        // { name: 'Logout', route: '/logout', icon: 'LogoutOutlined', loggedIn: true }
       ]
     };
   },

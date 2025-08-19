@@ -28,5 +28,19 @@ class EmployeeController extends Controller
             'new_joinees' => $newJoinees
         ]);
     }
+    public function getEmployees(Request $request){
+        $userId=auth()->id();
+        $employee = Employee::where('user_id', $userId)->first();
+
+        if (!$employee) {
+            return response()->json(['message' => 'Employee not found'], 404);
+        }
+
+        return response()->json([
+            'employee_id' => $employee->employee_id,
+            'first_name'  => $employee->first_name,
+            'last_name'   => $employee->last_name,
+        ]);
+    }
 
 }
