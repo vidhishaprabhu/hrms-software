@@ -1,8 +1,9 @@
 <template>
+<h4 class="mb-4 text-center" style="color:#0077B6;font-weight:600">Leave Application</h4>
+<div class="login-page">
+  <div class="login-card">
   <div class="d-flex justify-content-center align-items-start mt-4">
   <div class="card shadow p-4" style="max-width: 800px; width: 100%;">
-    <h4 class="mb-4 text-center">Leave Application</h4>
-
     <form @submit.prevent="submitLeave" class="row g-3">
       <div class="col-md-6">
         <label class="form-label">Name/Employee Id</label>
@@ -51,6 +52,8 @@
       </div>
     </form>
   </div>
+</div>
+</div>
 </div>
 
 </template>
@@ -175,4 +178,46 @@ resetForm(){
   background-color:#0077B6;
   color:white;
 }
+.login-page {
+  background-image: url('@/assets/hrms-back.png');
+  background-size: cover;          /* fully cover screen */
+  background-repeat: no-repeat;
+  background-position: center;
+  width: 100%;                     /* full screen width */
+  min-height: 100vh;               /* always fill screen height */
+
+  display: flex;                   /* center the card */
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  box-sizing: border-box;
+  overflow-x: hidden;              /* prevent horizontal scroll */
+}
+
+/* ✅ Card responsiveness */
+.card {
+  width: 100%;
+  max-width: 600px;                /* don’t let it grow too wide */
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.85); /* glassy look */
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+  backdrop-filter: blur(10px);     /* adds glass blur */
+}
+
+/* ✅ Mobile adjustments */
+@media (max-width: 768px) {
+  .card {
+    max-width: 90%;               /* shrink card on tablets */
+    padding: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .card {
+    max-width: 95%;               /* almost full width on mobile */
+    padding: 10px;
+  }
+}
+
 </style>

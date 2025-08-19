@@ -8,9 +8,9 @@
     <div class="d-flex align-items-center">
       <img :src="require('@/assets/hrms-logo.png')" alt="Logo" style="height: 40px; margin-right: 10px;" />
     </div>
-    <div class="text-white ml-8" style="padding-left:15%">Welcome, {{ userData.name }}</div>
-    <BellOutlined style="color:white; font-size: 20px;padding-left:15%;padding-right:3%" />
-    <div class="text-white">Month: {{ currentMonthYear }}</div>
+    <div class="text-white ml-8" style="padding-left:15%" v-if="showNavbarContent">Welcome, {{ userData.name }}</div>
+    <BellOutlined style="color:white; font-size: 20px;padding-left:15%;padding-right:3%" v-if="showNavbarContent" />
+    <div class="text-white" v-if="showNavbarContent">Month: {{ currentMonthYear }}</div>
     <template v-if="showNavbarContent">
       <div class="d-flex justify-content-between align-items-center">
     <div class="d-flex align-items-center gap-14">
@@ -24,9 +24,6 @@
 
   </div>
 </nav>
-
-
-  <!-- Main Body: Sidebar + Router View -->
   <div class="d-flex" style="height: calc(100vh - 60px);">
     <SidebarPage v-if="showSidebar" />
     <div class="flex-grow-1 p-4" style="background-color: #f9f9f9;">
@@ -127,21 +124,21 @@ export default {
   margin: 0;
 }
 .footer {
-    background: linear-gradient(to bottom right, #0077B6, #00B4D8);
-    color: #fff;
-    text-align: center;
-    padding: 12px 20px;
-    font-size: 14px;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    letter-spacing: 0.5px;
-    margin-top: 5%; /* will not work unless position is static/relative */
-    position: relative;
-  }
+  background: linear-gradient(to bottom right, #0077B6, #00B4D8);
+  color: #fff;
+  text-align: center;
+  padding: 12px 20px;
+  font-size: 14px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
+
+  position: fixed;
+  bottom: 0;         
+  left: 0;           
+  width: 100%;       
+  z-index: 1000;     
+}
+
   html, body {
   height: 100%;
   margin: 0;

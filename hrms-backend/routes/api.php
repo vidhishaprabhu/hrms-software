@@ -55,4 +55,5 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/leave-balances', [LeaveBalanceController::class, 'index']);
     Route::get('/employee-name-id', [EmployeeController::class, 'getEmployees']);
     Route::post('/apply-leave', [LeaveController::class, 'apply']);
+    Route::get('/leave-count', [LeaveController::class, 'totalLeaveCount']);
 });

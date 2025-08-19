@@ -4,7 +4,7 @@
 
     <!-- Sign In Card -->
     <div class="col-md-4">
-      <div class="card shadow-sm rounded-4 text-center p-3 h-100" style="margin-left: 20px;">
+      <div class="card shadow-sm rounded-4 text-center p-3 h-100 " style="margin-left: 20px;">
         <div style="display: flex; align-items: center;">
   <h5>Employee Sign In</h5>
   <i class="bi bi-box-arrow-in-right" 
@@ -30,8 +30,6 @@
                 <h5 class="modal-title">Attendance Mark</h5>
                 <button type="button" class="btn-close" @click="closeModal"></button>
               </div>
-
-              <!-- Body -->
               <div class="modal-body">
                 <div class="mb-3">
                   <label class="form-label">Enter sign in location<span class="text-danger">*</span></label>
@@ -42,7 +40,6 @@
                   </select>
                 </div>
 
-                <!-- Remark -->
                 <div class="mb-3">
                   <label class="form-label">Remark</label>
                   <textarea class="form-control" placeholder="Reason" v-model="remark"></textarea>
@@ -87,10 +84,10 @@
             <span :class="{ 'fw-bold': index === 0 }">{{ holiday.title }}</span>
             <span>
               <template v-if="holiday.type === 'Restricted'">
-                <a v-if="!holiday.applied" href="#" class="text-primary" @click.prevent="openForm(holiday)">
+                <!-- <a v-if="!holiday.applied" href="#" class="text-primary" @click.prevent="openForm(holiday)">
                   Apply
-                </a>
-                <span v-else class="text-success">Applied</span>
+                </a> -->
+                <!-- <span v-else class="text-success">Applied</span> -->
               </template>
               {{ holiday.holiday_date }}
             </span>
@@ -145,7 +142,7 @@
     </div>
   </div>
     <div class="col-md-4">
-  <div class="card shadow-sm rounded-4 p-3 text-center h-100">
+  <div class="card shadow-sm rounded-4 p-3 text-center custom-card mb-6 h-100">
     <h5 class="text-center">Attendance Monthly</h5>
     <i class="bi bi-calendar-event-fill"></i>
     <div class="card-body">
@@ -164,70 +161,72 @@
       <div class="leave-item">
         <span class="leave-name" style="font-size:13px">Leave</span>
         <div class="leave-right">
-          <span class="leave-days"></span>
+          <span class="leave-days">{{leaveCount}}</span>
         </div>
       </div>
     </div>
   </div>
 </div>
-<div class="col-md-4">
-  <div class="card shadow-sm rounded-4 p-3 text-center h-100">
-    <h5>Leave Balance</h5>
-      <i class="bi bi-calendar-check-fill"></i>
+<div class="col-md-4 d-flex">
+  <div class="card shadow-sm rounded-4 p-3 text-center mb-4 leave-card w-100">
+    <h5 class="mb-3">Leave Balance</h5>
+    <i class="bi bi-calendar-check-fill fs-3" style="color:#00B4D8"></i>
     <div class="card-body">
+      
       <div class="leave-item">
-        <span class="leave-name" style="font-size:13px">Bereavement Leave</span>
+        <span class="leave-name">Bereavement Leave</span>
         <div class="leave-right">
           <span class="leave-days">{{ leaveBalanceData?.bereavement_leave }}</span>
           <router-link 
-      :to="{ name: 'apply-leave', params: { type: 'bereavement' } }" 
-      class="apply-link"
-    >
-      Apply
-    </router-link>
+            :to="{ name: 'apply-leave', params: { type: 'bereavement' } }" 
+            class="apply-link">
+            Apply
+          </router-link>
         </div>
       </div>
+
       <div class="leave-item">
-        <span class="leave-name" style="font-size:13px">Annual Leave</span>
+        <span class="leave-name">Annual Leave</span>
         <div class="leave-right">
           <span class="leave-days">{{ leaveBalanceData?.annual_leave }}</span>
           <router-link 
-      :to="{ name: 'apply-leave', params: { type: 'annual' } }" 
-      class="apply-link"
-    >
-      Apply
-    </router-link>
+            :to="{ name: 'apply-leave', params: { type: 'annual' } }" 
+            class="apply-link">
+            Apply
+          </router-link>
         </div>
       </div>
+
       <div class="leave-item">
-        <span class="leave-name" style="font-size:13px">Restricted Holiday</span>
+        <span class="leave-name">Restricted Holiday</span>
         <div class="leave-right">
           <span class="leave-days">{{ leaveBalanceData?.restricted_holiday }}</span>
           <router-link 
-      :to="{ name: 'apply-leave', params: { type: 'restricted_holiday' } }" 
-      class="apply-link"
-    >
-      Apply
-    </router-link>
+            :to="{ name: 'apply-leave', params: { type: 'restricted_holiday' } }" 
+            class="apply-link">
+            Apply
+          </router-link>
         </div>
       </div>
+
       <div class="leave-item">
-        <span class="leave-name" style="font-size:13px">Work from Home</span>
+        <span class="leave-name">Work from Home</span>
         <div class="leave-right">
           <span class="leave-days">{{ leaveBalanceData?.work_from_home }}</span>
           <router-link 
-      :to="{ name: 'apply-leave', params: { type: 'work_from_home' } }" 
-      class="apply-link"
-    >
-      Apply
-    </router-link>
+            :to="{ name: 'apply-leave', params: { type: 'work_from_home' } }" 
+            class="apply-link">
+            Apply
+          </router-link>
         </div>
       </div>
+
     </div>
   </div>
 </div>
+
 <div class="col-md-4">
-  <div class="card shadow-sm rounded-4 p-3 text-center h-100">
+  <div class="card shadow-sm rounded-4 p-3 text-center custom-card mb-6">
     <h5>Quick Access</h5>
     <div class="card-body">
       <a href="#">IT Statement</a>
@@ -250,6 +249,7 @@ export default {
   },
   data() {
     return {
+      leaveCount:'',
       employeeId: null,
       leaveBalanceData:{},
       absentDays:'',
@@ -312,6 +312,7 @@ export default {
     this.signOutTime = localStorage.getItem(`checkOutTime_${this.userData.id}`) || null;
   }
   await this.checkSignInStatus();
+  this.getLeaveCounts();
   this.fetchLeaveBalance();
   this.fetchEmployeeData();
   this.startClock();
@@ -329,6 +330,14 @@ export default {
     this.employeeId = localStorage.getItem('employeeId');
   },
   methods: {
+    async getLeaveCounts() {
+      try {
+        const response = await api.get("/leave-count");
+        this.leaveCount=response.data.total;
+      } catch (error) {
+        console.error("There is an error in fetching leave count:", error);
+      }
+    },
     handleSignInOut() {
       if (!this.isSignedIn) {
         // Sign In
@@ -544,125 +553,131 @@ async checkIn() {
 
 <style scoped>
 
-  .card {
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 9px 8px rgba(0,0,0,0.05);
-    width: 300px;
-    padding: 15px;
-    display: flex;
-    flex-direction: column;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    background: linear-gradient(135deg, #E0F7FA, #F1F8FE);
+  /* Global Card Styling */
+.card {
+  border: none;
+  border-radius: 16px !important;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
 
-  }
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.12);
+}
 
-  .card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
-  }
+.card h5 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #333;
+}
 
-  .card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-bottom: 8px;
-    border-bottom: 1px solid #f0f0f0;
-  }
+.card-body {
+  padding: 0.5rem 0.75rem;
+}
 
-  .card-header h3 {
-    font-size: 1.1rem;
-    margin: 0;
-    font-weight: bold;
-    color: #333;
-  }
+/* Leave Balance Section */
+.leave-card {
+  min-height: 280px;
+}
 
-  .card-header i {
-    font-size: 1.5rem;
-  }
-
-  .subtitle {
-    font-size: 0.9rem;
-    color: #666;
-    margin: 8px 0;
-    font-weight: 500;
-  }
-
-  .card-body .row {
-    display: flex;
-    justify-content: space-between;
-    padding: 6px 0;
-    font-size: 0.95rem;
-    border-bottom: 1px solid #f5f5f5;
-  }
-
-  .card-body a {
-   
-    text-decoration: none;
-    font-weight: 500;
-  }
-
-  .card-body a:hover {
-    text-decoration: underline;
-  }
-  .leave-item {
+.leave-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 6px 10px;
+  padding: 6px 0;
+  border-bottom: 1px dashed #e0e0e0;
+  font-size: 14px;
+}
+
+.leave-item:last-child {
+  border-bottom: none;
+}
+
+.leave-name {
+  font-weight: 500;
+  color: #444;
 }
 
 .leave-right {
   display: flex;
   align-items: center;
-  gap: 10px; /* space between 5.5 and Apply */
-}
-
-.leave-name {
-  font-weight: bold;
+  gap: 10px;
 }
 
 .leave-days {
+  font-weight: 600;
   color: #0077B6;
+  font-size: 14px;
 }
+
+.apply-link {
+  font-size: 13px;
+  color: #0077B6;
+  text-decoration: none;
+  font-weight: 500;
+  padding: 2px 6px;
+  border-radius: 6px;
+  background: #eaf6fc;
+  transition: background 0.2s ease;
+}
+
+.apply-link:hover {
+  background: #0077B6;
+  color: white;
+}
+
+/* Attendance card tweaks */
+.custom-card .leave-item {
+  font-size: 13px;
+}
+
+.custom-card i {
+  font-size: 22px;
+  color: #00B4D8;
+  margin-bottom: 6px;
+}
+
+/* Holiday List */
+.card .holiday-item {
+  font-size: 14px;
+  padding: 4px 0;
+  border-bottom: 1px solid #f1f1f1;
+}
+
+.card .holiday-item:last-child {
+  border-bottom: none;
+}
+
+/* Calendar Table */
 .calendar-table {
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
-}
-
-.calendar-table th,
-.calendar-table td {
-  padding: 8px;
+  font-size: 13px;
   text-align: center;
-  border: none;
 }
 
-/* Style the day names */
-.calendar-table thead th {
+.calendar-table th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+}
+
+.calendar-table td {
+  padding: 6px;
+}
+
+.calendar-table span {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  line-height: 24px;
+  border-radius: 50%;
+}
+
+.calendar-table .today {
+  background: #0077B6;
+  color: white;
   font-weight: bold;
 }
 
-/* Apply weekend styling to the span inside the table cell */
-td span.weekend {
-  background-color: #b8bdc1; /* Yellow color */
-  border-radius: 50%;
-  display: inline-block;
-  width: 30px;
-  height: 30px;
-  line-height: 30px;
-  color: #333;
-  cursor: pointer;
-}
 
-/* Style for other highlighted days (light green) */
-td span.highlight {
-  background-color: #a5d6a7; /* Light green color */
-  border-radius: 50%;
-  display: inline-block;
-  width: 30px;
-  height: 30px;
-  line-height: 30px;
-  color: #333;
-}
+
 </style>
