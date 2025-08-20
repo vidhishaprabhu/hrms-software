@@ -10,14 +10,14 @@ use Illuminate\Support\Facades\Log;
 class AttendanceController extends Controller
 {
     public function index(Request $request) {
-    $userId = auth()->id(); // get authenticated user ID
+        $userId = auth()->id();
 
-    $checkIn = Attendance::where('user_id', $userId)
+        $checkIn = Attendance::where('user_id', $userId)
              ->latest()
              ->value('check_in');
 
 
-    return response()->json($checkIn);
+        return response()->json($checkIn);
     }
 
 
@@ -31,19 +31,6 @@ public function store(Request $request)
 
    $userId = auth()->id(); // logged-in user ID
     $today = now()->toDateString(); // 'YYYY-MM-DD'
-
-    // Check if already checked in today
-    // $alreadyCheckedIn = Attendance::where('user_id', $userId)
-    //     ->whereDate('attendance_date', $today)
-    //     ->exists();
-
-    // if ($alreadyCheckedIn) {
-    //     return response()->json([
-    //         'message' => 'You have already checked in today.',
-    //     ], 400);
-    // }
-    
-    // Store new attendance record
     $attendance = new Attendance();
     $attendance->user_id = $userId;
     $attendance->check_in = now();
@@ -75,7 +62,7 @@ public function signOutByUserId($userId)
     $durationHours = $checkInTime->diffInHours($checkOutTime);
 
     // Mark status
-    $attendance->status = $durationHours >= 1 ? 'Present' : 'Absent';
+    $attendance->status = $durationHours >= 8 ? 'Present' : 'Absent';
     $attendance->save();
 
     return response()->json([
@@ -91,7 +78,7 @@ public function getUserAttendanceSummary($userId)
 {
     $presentDays = Attendance::where('user_id', $userId)
         ->where('status', 'Present')
-        ->whereRaw('TIMESTAMPDIFF(HOUR, check_in, check_out) >= 1')
+        ->whereRaw('TIMESTAMPDIFF(HOUR, check_in, check_out) >= 8')
         ->count();
 
     $absentDays = Attendance::where('user_id', $userId)

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Leave;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
 class LeaveController extends Controller
@@ -28,29 +29,7 @@ class LeaveController extends Controller
             'rejected_leaves' => $count
         ]);
     }
-    // public function apply(Request $request)
-    // {
-    //     $request->validate([
-    //         'start_date' => 'required|date',
-    //         'end_date'   => 'required|date|after_or_equal:start_date',
-    //         'reason'     => 'required|string',
-    //         'leave_type' => 'required|string',
-    //     ]);
-
-    //     $leave = Leave::create([
-    //         'user_id'    => Auth::id(),
-    //         'start_date' => $request->start_date,
-    //         'end_date'   => $request->end_date,
-    //         'reason'     => $request->reason,
-    //         'leave_type' => $request->leave_type,
-    //         'status'     => 'Pending', // default
-    //     ]);
-
-    //     return response()->json([
-    //         'message' => 'Leave applied successfully!',
-    //         'data'    => $leave
-    //     ], 201);
-    // }
+    
     public function apply(Request $request)
 {
     $request->validate([
@@ -61,11 +40,7 @@ class LeaveController extends Controller
     ]);
 
     $userId = Auth::id();
-
-    // 🔹 Get employee_id from employees table
     $employeeId = \App\Models\Employee::where('user_id', $userId)->value('id'); 
-    // or 'employee_id' column if that's what you store
-
     if (!$employeeId) {
         return response()->json(['message' => 'Employee ID not found for user'], 404);
     }
@@ -86,13 +61,12 @@ class LeaveController extends Controller
     $leaveColumns = [
         'annual'         => 'annual_leave',
         'bereavement'    => 'bereavement_leave',
-        'restricted'=> 'restricted_holiday', 
+        'restricted_holiday'=> 'restricted_holiday', 
         'work_from_home' => 'work_from_home'
     ];
 
     $column = $leaveColumns[$request->leave_type];
 
-    // Check balance
     if ($leaveBalance->$column < $days) {
         return response()->json(['message' => 'Insufficient leave balance'], 400);
     }
@@ -116,6 +90,17 @@ class LeaveController extends Controller
         'message' => 'Leave applied successfully!',
         'data'    => $leave
     ], 201);
+}
+public function totalLeaveCount()
+{
+    $userId = Auth::id();
+
+    $totalLeaves = Leave::where('user_id', $userId)->count();
+
+    return response()->json([
+        'message' => 'Total leave count fetched successfully',
+        'total'   => $totalLeaves
+    ]);
 }
 
 

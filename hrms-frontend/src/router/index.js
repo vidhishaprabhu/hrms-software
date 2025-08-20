@@ -6,6 +6,8 @@ import LoginPage from '../components/LoginPage.vue'
 import EmployeeDashboard from '../components/EmployeeDashboard.vue'
 import AddLeave from '../components/AddLeave.vue';
 import ApplyLeavePage from '../components/ApplyLeavePage.vue';
+import EmployeeInfo from '../components/EmployeeInfo';
+import EmployeeProfile from '../components/EmployeeProfile';
 const routes = [
   { path: '/register', name: 'RegisterPage', component: RegisterPage },
   { path: '/admin-dashboard', name: 'DashboardPage', component: DashboardPage,meta: { requiresAuth: true, role: 'admin' } },
@@ -18,6 +20,18 @@ const routes = [
     name: 'apply-leave',
     component: ApplyLeavePage,
     props: true,
+    meta: { requiresAuth: true, role: 'employee'}
+  },
+  {
+    path: '/employee-info',
+    name: 'EmployeeInfo',
+    component: EmployeeInfo,
+    meta: { requiresAuth: true, role: 'employee'}
+  },
+  {
+    path: '/employee-profile',
+    name: 'EmployeeProfile',
+    component: EmployeeProfile,
     meta: { requiresAuth: true, role: 'employee'}
   }
 ]

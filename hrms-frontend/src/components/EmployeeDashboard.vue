@@ -15,7 +15,7 @@
 
         <button
   class="btn my-2 d-flex align-items-center justify-content-center mx-auto"
-  @click="showModal=true" style="background-color: #0077B6; color: white;width:65%"
+  @click="showModal=true" style="background-color: #00B4D8; color: white;width:65%"
 >
   <i class="bi bi-fingerprint me-2"></i>
   {{ isSignedIn ? 'Sign Out' : 'Sign In' }}
@@ -26,9 +26,9 @@
             <div class="modal-content">
 
               <!-- Header -->
-              <div class="modal-header text-white" style="background-color: #0077B6;">
-                <h5 class="modal-title">Attendance Mark</h5>
-                <button type="button" class="btn-close" @click="closeModal"></button>
+              <div class="modal-header text-white" style="background-color: #00B4D8;">
+                <h5 class="modal-title" style="color:white">Attendance Mark</h5>
+                <button type="button" class="btn-close" @click="closeModal" style="color:white;background-color:white"></button>
               </div>
               <div class="modal-body">
                 <div class="mb-3">
@@ -51,7 +51,7 @@
                 <button class="btn btn-light" @click="closeModal">Cancel</button>
 
                 <!-- Toggle between Sign In and Sign Out -->
-               <button @click="isSignedIn ? signOut() : checkIn()" class="btn" style="background-color: #0077B6; color: white;"
+               <button @click="isSignedIn ? signOut() : checkIn()" class="btn" style="background-color:#00B4D8; color: white;"
 >
                 {{ isSignedIn ? 'Sign Out' : 'Sign In' }}
               </button>
@@ -84,9 +84,9 @@
             <span :class="{ 'fw-bold': index === 0 }">{{ holiday.title }}</span>
             <span>
               <template v-if="holiday.type === 'Restricted'">
-                <!-- <a v-if="!holiday.applied" href="#" class="text-primary" @click.prevent="openForm(holiday)">
+                <a v-if="!holiday.applied" href="#" style="color:#00B4D8">
                   Apply
-                </a> -->
+                </a>
                 <!-- <span v-else class="text-success">Applied</span> -->
               </template>
               {{ holiday.holiday_date }}
@@ -229,7 +229,7 @@
   <div class="card shadow-sm rounded-4 p-3 text-center custom-card mb-6">
     <h5>Quick Access</h5>
     <div class="card-body">
-      <a href="#">IT Statement</a>
+      <a href="#" style="color:#00B4D8">IT Statement</a>
     </div>
   </div>
 </div>
@@ -623,7 +623,7 @@ async checkIn() {
 }
 
 .apply-link:hover {
-  background: #0077B6;
+  background: #00B4D8;
   color: white;
 }
 

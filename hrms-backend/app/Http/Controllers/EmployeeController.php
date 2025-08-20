@@ -40,6 +40,8 @@ class EmployeeController extends Controller
             'employee_id' => $employee->employee_id,
             'first_name'  => $employee->first_name,
             'last_name'   => $employee->last_name,
+            'email'=>$employee->email,
+            'status'=>$employee->status
         ]);
     }
 

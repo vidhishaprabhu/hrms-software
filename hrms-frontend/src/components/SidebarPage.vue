@@ -56,7 +56,7 @@ export default {
         { name: 'Attendance', route: '/attendance', icon: 'CalendarOutlined' },
         { name: 'Leave Info', route: '/leave', icon: 'InfoCircleOutlined' },
         { name: 'Leave Add', route: '/leave-add', icon: 'PlusOutlined' },
-        { name: 'Employee Info', route: '/employee-info', icon: 'InfoCircleOutlined' },
+        { name: 'Employee Details', route: '/employee-info', icon: 'InfoCircleOutlined' },
         { name: 'Approval', route: '/approval', icon: 'CheckCircleOutlined' },
         { name: 'Reports', route: '/reports', icon: 'BarChartOutlined' },
         { name: 'Payroll', route: '/payroll', icon: 'DollarOutlined' },
