@@ -6,8 +6,9 @@ import LoginPage from '../components/LoginPage.vue'
 import EmployeeDashboard from '../components/EmployeeDashboard.vue'
 import AddLeave from '../components/AddLeave.vue';
 import ApplyLeavePage from '../components/ApplyLeavePage.vue';
-import EmployeeInfo from '../components/EmployeeInfo';
-import EmployeeProfile from '../components/EmployeeProfile';
+import EmployeeInfo from '../components/EmployeeInfo.vue';
+import EmployeeProfile from '../components/EmployeeProfile.vue';
+import EmployeeAdd from '../components/AddEmployee.vue';
 const routes = [
   { path: '/register', name: 'RegisterPage', component: RegisterPage },
   { path: '/admin-dashboard', name: 'DashboardPage', component: DashboardPage,meta: { requiresAuth: true, role: 'admin' } },
@@ -33,7 +34,14 @@ const routes = [
     name: 'EmployeeProfile',
     component: EmployeeProfile,
     meta: { requiresAuth: true, role: 'employee'}
+  },
+  {
+    path: '/employee-add',
+    name: 'EmployeeAdd',
+    component: EmployeeAdd,
+    meta: { requiresAuth: true, role: 'admin'}
   }
+  
 ]
 
 const router = createRouter({

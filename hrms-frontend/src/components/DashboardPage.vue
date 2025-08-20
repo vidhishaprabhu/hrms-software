@@ -84,7 +84,7 @@
             <option value="Restricted">Restricted</option>
           </select>
           <button @click="addHoliday" class="btn btn-primary w-100">
-            <SaveOutlined /> Add Holiday
+            <PlusOutlined/> Add Holiday
           </button>
         </td>
       </tr>
@@ -92,9 +92,9 @@
   </table>
 </div>
 
-   <h5 class="text-center" style="color:#0077B6;font-weight:600">Upcoming Holidays <CalendarOutlined/></h5>
-  <div class="d-flex justify-content-center">
-  <table class="table table-bordered text-center w-auto">
+   <h5 class="text-center" style="color:#0077B6;font-weight:600;">Upcoming Holidays <CalendarOutlined/></h5>
+  <div class="d-flex justify-content-center mb-5">
+  <table class="table table-bordered text-center w-auto mb-5">
     <thead>
       <tr>
         <th>Title</th>
@@ -105,7 +105,6 @@
       </tr>
     </thead>
     <tbody>
-      
       <tr v-for="holiday in holidays" :key="holiday.id">
         <td>
           <input
@@ -161,6 +160,7 @@
   </table>
 </div>
 
+
 </div>
 </template>
 
@@ -174,7 +174,8 @@ import {
   CalendarOutlined,
   EditOutlined,
   DeleteOutlined,
-  SaveOutlined
+  SaveOutlined,
+  PlusOutlined
 } from '@ant-design/icons-vue';
 export default {
   name: 'DashboardPage',
@@ -185,7 +186,8 @@ export default {
     CalendarOutlined,
     EditOutlined,
     DeleteOutlined,
-    SaveOutlined
+    SaveOutlined,
+    PlusOutlined
   },
   data() {
     return {
