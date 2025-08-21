@@ -3,6 +3,10 @@
     <div class="overlay">
       <div class="form-wrapper">
         <div class="card p-4 shadow-sm">
+          <div class="text-center mb-4">
+      <img :src="require('@/assets/hrms-logo.png')" alt="Logo" style="width: 180px; height: auto;" />
+      <p style="color:#0077B6;font-family:cursive">Manage Your Resource Better</p>
+    </div>
           <h2 class="text-center mb-4" style="color:#0077B6">Register</h2>
           <form @submit.prevent="register">
             <div class="mb-3">

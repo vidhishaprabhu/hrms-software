@@ -3,6 +3,10 @@
     <div class="overlay">
       <div class="form-wrapper">
         <div class="card p-4 shadow-sm">
+          <div class="text-center mb-4">
+      <img :src="require('@/assets/hrms-logo.png')" alt="Logo" style="width: 180px; height: auto;" />
+      <p style="color:#0077B6;font-family:cursive">Manage Your Resource Better</p>
+    </div>
           <h2 class="text-center mb-4" style="color:#0077B6">Login</h2>
           <form @submit.prevent="register" >
             <div class="mb-3" >
@@ -34,17 +38,13 @@
             <button
               type="submit"
               class="btn w-100"
-              style="background-color:#0077B6;color:white;border:1px solid blue"
+              style="background-color:#0077B6;color:white;border:1px solid blue mt-5"
               @click="login"
             >Login</button>
             <p v-if="error" class="text-danger text-center mt-3">{{ error }}</p>
             <p v-else-if="message" class="text-success text-center mt-3">{{ message }}</p>
           </form>
         </div>
-        <p class="text-center mt-4 fw-bold fs-5" style="font-family:italic">
-          Don't have an account ?
-          <router-link to="/register" style="color:#0077B6">Register</router-link>
-        </p>
       </div>
     </div>
   </div>

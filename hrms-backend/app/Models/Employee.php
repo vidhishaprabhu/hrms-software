@@ -19,8 +19,20 @@ class Employee extends Model
         'department',
         'designation',
         'date_of_joining',
+        'blood_group',
+        'city',
+        'address',
         'gender',
         'status',
+        'father_name',
+        'date_of_birth',
+        'marital_status','physically_challenged',
+        'state',
+        'pin',
+        'confirmation_date',
+        'employee_type',
+        'probation_period_days'
+        
     ];
     public function user()
     {
