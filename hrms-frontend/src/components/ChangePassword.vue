@@ -3,13 +3,10 @@
     <div class="row justify-content-center">
       <div class="col-md-6">
         <div class="card shadow-lg border-0 rounded-3">
-          <div class="card-header bg-primary text-white text-center">
-            <h5 class="mb-0">Change Password</h5>
+          <div class="card-header text-center">
           </div>
           <div class="card-body">
             <form @submit.prevent="changePassword">
-              
-              <!-- Current Password -->
               <div class="mb-3">
                 <label class="form-label">Current Password</label>
                 <input 
@@ -21,7 +18,6 @@
                 />
               </div>
 
-              <!-- New Password -->
               <div class="mb-3">
                 <label class="form-label">New Password</label>
                 <input 
@@ -33,7 +29,6 @@
                 />
               </div>
 
-              <!-- Confirm New Password -->
               <div class="mb-3">
                 <label class="form-label">Confirm New Password</label>
                 <input 
@@ -45,36 +40,71 @@
                 />
               </div>
 
-              <!-- Submit Button -->
               <div class="d-grid">
-                <button type="submit" class="btn btn-success">
+                <button type="submit" class="btn">
                   Change Password
                 </button>
               </div>
             </form>
           </div>
         </div>
-
-        <!-- Message -->
-        <div v-if="message" class="alert alert-info mt-3 text-center">
-          {{ message }}
-        </div>
       </div>
     </div>
   </div>
 </template>
 <script>
+import api from '../api';
 export default{
   name:'ChangePassword',
 data(){
   return{
-    form: {
+    form: 
+    {
         current_password: "",
         new_password: "",
         new_password_confirmation: ""
-      },
+    },
+    userData:[],
   }
+},
+ mounted(){
+  this.getUser();
+
+},
+methods:{
+  async getUser(){
+    try{
+      const response=await api.get('/get-user-data');
+      this.userData=response.data;
+
+    }
+    catch(error){
+      console.error("Error in fetching user data");
+    }
+
+  },
+  async changePassword() {
+    try {
+    const response = await api.put(`change-password/${this.userData.id}`, {
+      current_password: this.form.current_password,
+      new_password: this.form.new_password,
+      new_password_confirmation: this.form.new_password_confirmation,
+    });
+
+    this.message = response.data.message;
+    alert(this.message);
+  } catch (error) {
+    this.message = error.response?.data?.message || "Error changing password.";
+  }
+  }
+
 }
 
 }
 </script>
+<style scoped>
+.btn {
+  background-color: #00B4D8;
+  color: white;
+}
+</style>

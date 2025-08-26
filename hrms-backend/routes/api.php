@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\LeaveController;
 use App\Http\Controllers\HolidayController;
 use App\Http\Controllers\EmployeeController;
@@ -51,11 +52,12 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::put('/attendance/signout/{userId}', [AttendanceController::class, 'signOutByUserId']);
     Route::get('/attendance/status', [AttendanceController::class, 'status']);
     Route::get('/attendance/summary/{userId}', [AttendanceController::class, 'getUserAttendanceSummary']);
-    // Route::get('/leave-balances', [LeaveBalanceController::class, 'index']);
     Route::get('/leave-balances', [LeaveBalanceController::class, 'index']);
     Route::get('/employee-name-id', [EmployeeController::class, 'getEmployees']);
     Route::post('/apply-leave', [LeaveController::class, 'apply']);
     Route::get('/leave-count', [LeaveController::class, 'totalLeaveCount']);
     Route::put('/employees/{id}', [EmployeeController::class, 'update']);
     Route::get('/employees/{id}', [EmployeeController::class, 'show']);
+    Route::put('/change-password/{id}', [UserController::class, 'changePassword']);
+    Route::get('/get-user-data',[UserController::class,'getUserData']);
 });

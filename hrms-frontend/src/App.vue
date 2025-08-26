@@ -8,7 +8,6 @@
       <p style="color:white; font-family:cursive; margin:0;font-size:6px">Manage Your Resource Better</p>
     </div>
 
-    <div class="text-white ml-8" style="padding-left:15%" v-if="showNavbarContent">Welcome, {{ userData.name }}</div>
     <BellOutlined style="color:white; font-size: 20px;padding-left:15%;padding-right:3%" v-if="showNavbarContent" />
     <div class="text-white" v-if="showNavbarContent">Month: {{ currentMonthYear }}</div>
     <template v-if="showNavbarContent">
@@ -33,10 +32,16 @@
       />
     </a>
     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
-      <li><a class="dropdown-item" href="#">Profile</a></li>
-      <li><router-link class="dropdown-item" to="/change-password">Settings</router-link></li>
-      <li><a class="dropdown-item" href="#" @click="logout">Logout</a></li>
-    </ul>
+  <li>
+    <div class="dropdown-item text-dark" style="font-weight:bold;">
+      Welcome, {{ userData.name }}
+    </div>
+  </li>
+  <li><a class="dropdown-item" href="#">Profile</a></li>
+  <li><router-link class="dropdown-item" to="/change-password">Settings</router-link></li>
+  <li><a class="dropdown-item" href="#" @click="logout">Logout</a></li>
+</ul>
+
   </div>
 </div>
 
@@ -113,7 +118,7 @@ export default {
       localStorage.removeItem(`checkInTime_${this.user_id}`);
     }
 
-    this.checkInTime = null;  // <-- reset local checkInTime data
+    this.checkInTime = null;  
 
     alert("User logged out successfully");
     this.$router.push('/');
