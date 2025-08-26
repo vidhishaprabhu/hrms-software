@@ -4,6 +4,7 @@ import router from './router'
 import store from './store'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import '@mdi/font/css/materialdesignicons.min.css';
+import "ant-design-vue/dist/reset.css";
 
 
 createApp(App).use(router).use(store).mount('#app')

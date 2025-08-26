@@ -13,12 +13,34 @@
     <div class="text-white" v-if="showNavbarContent">Month: {{ currentMonthYear }}</div>
     <template v-if="showNavbarContent">
       <div class="d-flex justify-content-between align-items-center">
-    <div class="d-flex align-items-center gap-14">
-      <button class="btn btn-danger d-flex align-items-center gap-2" style="border: none;" @click="logout">
-        <PoweroffOutlined />
-        Logout
-      </button>
-    </div>
+   <div class="navbar p-2 d-flex justify-content-end">
+
+  <div class="dropdown">
+    <a
+      class="d-flex align-items-center text-decoration-none"
+      href="#"
+      id="profileDropdown"
+      role="button"
+      data-bs-toggle="dropdown"
+      aria-expanded="false"
+    >
+      <img
+        src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
+        class="rounded-circle"
+        width="40"
+        height="40"
+        style="cursor: pointer;"
+      />
+    </a>
+    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+      <li><a class="dropdown-item" href="#">Profile</a></li>
+      <li><router-link class="dropdown-item" to="/change-password">Settings</router-link></li>
+      <li><a class="dropdown-item" href="#" @click="logout">Logout</a></li>
+    </ul>
+  </div>
+</div>
+
+
   </div>
     </template>
 
@@ -37,16 +59,16 @@
 <script>
 import SidebarPage from './components/SidebarPage.vue';
 import {
-  PoweroffOutlined,
-   BellOutlined 
+   BellOutlined,
+   
 } from '@ant-design/icons-vue';
 import api from './api'; 
 export default {
   name: 'App',
   components: {
     SidebarPage,
-    PoweroffOutlined,
-     BellOutlined 
+     BellOutlined ,
+    
   },
   data() {
     return {
@@ -162,4 +184,10 @@ main {
     background:  #00B4D8;
     transition: background 0.3s ease;
   }
+  .navbar {
+  display: flex;
+  justify-content: flex-end;
+  padding: 10px 20px;
+  background: #f5f5f5;
+}
 </style>
