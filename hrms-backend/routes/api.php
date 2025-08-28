@@ -60,4 +60,5 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/employees/{id}', [EmployeeController::class, 'show']);
     Route::put('/change-password/{id}', [UserController::class, 'changePassword']);
     Route::get('/get-user-data',[UserController::class,'getUserData']);
+    Route::delete('/delete-user/{id}',[EmployeeController::class,'destroy']);
 });

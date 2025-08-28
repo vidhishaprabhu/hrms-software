@@ -9,6 +9,8 @@ import ApplyLeavePage from '../components/ApplyLeavePage.vue';
 import EmployeeInfo from '../components/EmployeeInfo.vue';
 import EmployeeProfile from '../components/EmployeeProfile.vue';
 import EmployeeAdd from '../components/AddEmployee.vue';
+import ChangePassword from '../components/ChangePassword.vue';
+import EmployeesDisplay from '../components/EmployeesDisplay.vue'
 const routes = [
   { path: '/register', name: 'RegisterPage', component: RegisterPage },
   { path: '/admin-dashboard', name: 'DashboardPage', component: DashboardPage,meta: { requiresAuth: true, role: 'admin' } },
@@ -40,8 +42,19 @@ const routes = [
     name: 'EmployeeAdd',
     component: EmployeeAdd,
     meta: { requiresAuth: true, role: 'admin'}
-  }
-  
+  },
+  {
+    path:'/change-password',
+     name: 'ChangePassword',
+    component: ChangePassword,
+    meta: { requiresAuth: true}
+  },
+  {
+    path:'/employees',
+    name: 'EmployeesDisplay',
+    component: EmployeesDisplay,
+    meta: { requiresAuth: true,role:'admin'}
+  },
 ]
 
 const router = createRouter({

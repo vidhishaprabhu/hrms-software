@@ -111,10 +111,10 @@ export default {
     ]
   },
         { 
-    name: 'Employee Info', 
+    name: 'Employee', 
     icon: 'InfoCircleOutlined',
     children: [
-      { name: 'Employee Info', route: '/employee', icon: 'InfoCircleOutlined' },
+      { name: 'Employees', route: '/employees', icon: 'InfoCircleOutlined' },
       { name: 'Update Employee', route: '/employee-add', icon: 'PlusOutlined' },
       { name: 'Employee Details', route: '/employee-info', icon: 'InfoCircleOutlined' },
     ]

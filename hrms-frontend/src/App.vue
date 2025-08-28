@@ -33,14 +33,30 @@
     </a>
     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
   <li>
-    <div class="dropdown-item text-dark" style="font-weight:bold;">
+    <div class="dropdown-header fw-bolder">
       Welcome, {{ userData.name }}
     </div>
   </li>
-  <li><a class="dropdown-item" href="#">Profile</a></li>
-  <li><router-link class="dropdown-item" to="/change-password">Settings</router-link></li>
-  <li><a class="dropdown-item" href="#" @click="logout">Logout</a></li>
+  <li>
+    <router-link class="dropdown-item d-flex align-items-center" href="#" to="/employee-profile">
+      <i class="fas fa-user" style="margin-right:8px;"></i>
+     My Profile
+    </router-link>
+  </li>
+  <li>
+    <router-link class="dropdown-item d-flex align-items-center" to="/change-password">
+      <i class="fas fa-cog" style="margin-right:8px;"></i>
+      Settings
+    </router-link>
+  </li>
+      <li>
+    <a class="dropdown-item d-flex align-items-center" @click="logout" style="cursor:pointer;">
+      <i class="fas fa-power-off text-danger" style="margin-right:8px;"></i>
+      Logout
+    </a>
+  </li>
 </ul>
+
 
   </div>
 </div>
@@ -72,7 +88,7 @@ export default {
   name: 'App',
   components: {
     SidebarPage,
-     BellOutlined ,
+     BellOutlined,
     
   },
   data() {
@@ -195,4 +211,10 @@ main {
   padding: 10px 20px;
   background: #f5f5f5;
 }
+.dropdown-menu svg {
+  fill: currentColor; /* ensures the icon matches text color */
+  width: 16px;
+  height: 16px;
+}
+
 </style>

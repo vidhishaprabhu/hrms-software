@@ -6,7 +6,7 @@
     <div class="col-md-4">
       <div class="card shadow-sm rounded-4 text-center p-3 h-100 " style="margin-left: 20px;">
         <div style="display: flex; align-items: center;">
-  <h5>Employee Sign In</h5>
+  <h5>Employee Ckeck In</h5>
   <i class="bi bi-box-arrow-in-right" 
      style="font-size: 2.2rem; color: #00B4D8; margin-left: auto;"></i>
 </div>
@@ -18,7 +18,7 @@
   @click="showModal=true" style="background-color: #00B4D8; color: white;width:65%"
 >
   <i class="bi bi-fingerprint me-2"></i>
-  {{ isSignedIn ? 'Sign Out' : 'Sign In' }}
+  {{ isSignedIn ? 'Check Out' : 'Check In' }}
 </button>
 
         <div class="modal fade" :class="{ show: showModal }" style="display: block;" v-if="showModal">
@@ -53,7 +53,7 @@
                 <!-- Toggle between Sign In and Sign Out -->
                <button @click="isSignedIn ? signOut() : checkIn()" class="btn" style="background-color:#00B4D8; color: white;"
 >
-                {{ isSignedIn ? 'Sign Out' : 'Sign In' }}
+                {{ isSignedIn ? 'Check Out' : 'Check In' }}
               </button>
               </div>
 

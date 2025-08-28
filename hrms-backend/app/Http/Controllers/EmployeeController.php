@@ -97,5 +97,17 @@ class EmployeeController extends Controller
             'employee' => $employee
         ]);
     }
+    public function destroy($id)
+    {
+        $employee = Employee::where('employee_id', $id)->first();
+
+        if (!$employee) {
+            return response()->json(['message' => 'Employee not found'], 404);
+        }
+
+        $employee->delete();
+
+        return response()->json(['message' => 'Employee deleted successfully']);
+    }
 
 }
