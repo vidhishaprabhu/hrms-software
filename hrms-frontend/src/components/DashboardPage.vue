@@ -4,31 +4,25 @@
     <!-- Total Employees -->
     <div class="col-md-5" style="width:20%">
       <div class="card text-white bg-info mb-3 zoom-card">
-        <div class="card-header">Total Employees Dashboard</div>
+        <div class="card-header">Total Strength</div>
         <div class="card-body">
-          <h5 class="card-title">Total Employees</h5>
           <p class="card-text fs-3">{{ totalEmployees }}</p>
-          <button class="btn btn-primary"><EyeOutlined/> View</button>
         </div>
       </div>
     </div>
     <div class="col-md-5" style="width:20%">
       <div class="card text-white bg-info mb-3 zoom-card">
-        <div class="card-header">New Joinees Dashboard</div>
+        <div class="card-header">New Joining Today</div>
         <div class="card-body">
-          <h5 class="card-title">New Joinees</h5>
           <p class="card-text fs-3">{{ newJoinees }}</p>
-           <button class="btn btn-primary"><EyeOutlined/> View</button>
         </div>
       </div>
     </div>
     <div class="col-md-5" style="width:20%">
       <div class="card text-white bg-info mb-3 zoom-card">
-        <div class="card-header">Leave Dashboard</div>
+        <div class="card-header">New Joining this week</div>
         <div class="card-body">
-          <h5 class="card-title">Employees on Leave</h5>
           <p class="card-text fs-3">{{ leaves }}</p>
-           <router-link to="/attendance"><button class="btn btn-primary"><EyeOutlined/> View</button></router-link>
         </div>
       </div>
     </div>
@@ -172,7 +166,6 @@
 import axios from 'axios';
 import api from '../api';
 import {
-  EyeOutlined,
   CalendarOutlined,
   EditOutlined,
   DeleteOutlined,
@@ -182,7 +175,6 @@ import {
 export default {
   name: 'DashboardPage',
   components: {
-    EyeOutlined,
     CalendarOutlined,
     EditOutlined,
     DeleteOutlined,

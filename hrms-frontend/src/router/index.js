@@ -10,7 +10,8 @@ import EmployeeInfo from '../components/EmployeeInfo.vue';
 import EmployeeProfile from '../components/EmployeeProfile.vue';
 import EmployeeAdd from '../components/AddEmployee.vue';
 import ChangePassword from '../components/ChangePassword.vue';
-import EmployeesDisplay from '../components/EmployeesDisplay.vue'
+import EmployeesDisplay from '../components/EmployeesDisplay.vue';
+import LeaveInfo from '../components/LeaveInfo.vue';
 const routes = [
   { path: '/register', name: 'RegisterPage', component: RegisterPage },
   { path: '/admin-dashboard', name: 'DashboardPage', component: DashboardPage,meta: { requiresAuth: true, role: 'admin' } },
@@ -35,7 +36,7 @@ const routes = [
     path: '/employee-profile',
     name: 'EmployeeProfile',
     component: EmployeeProfile,
-    meta: { requiresAuth: true, role: 'employee'}
+    meta: { requiresAuth: true}
   },
   {
     path: '/employee-add',
@@ -53,6 +54,12 @@ const routes = [
     path:'/employees',
     name: 'EmployeesDisplay',
     component: EmployeesDisplay,
+    meta: { requiresAuth: true,role:'admin'}
+  },
+  {
+    path:'/leave-info',
+    name: 'LeaveInfo',
+    component:LeaveInfo,
     meta: { requiresAuth: true,role:'admin'}
   },
 ]

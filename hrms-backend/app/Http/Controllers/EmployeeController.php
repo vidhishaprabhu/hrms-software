@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\Employee;
 use Illuminate\Http\Request;
 
@@ -12,6 +13,51 @@ class EmployeeController extends Controller
         $employees = Employee::all();
         return response()->json($employees);
     }
+    public function filterEmployee(Request $request)
+{
+    $query = Employee::with('leaveBalance'); 
+
+    if ($request->has('search') && !empty($request->search)) {
+        $search = $request->search;
+        $query->where(function($q) use ($search) {
+            $q->where('first_name', 'like', "%{$search}%")
+              ->orWhere('last_name', 'like', "%{$search}%")
+              ->orWhere('email', 'like', "%{$search}%")
+              ->orWhere('department', 'like', "%{$search}%")
+              ->orWhere('designation', 'like', "%{$search}%");
+        });
+    }
+
+    $employees = $query->paginate(3);
+
+    return response()->json([
+        'data' => $employees->items(),
+        'current_page' => $employees->currentPage(),
+        'last_page' => $employees->lastPage(),
+        'per_page' => $employees->perPage(),
+        'total' => $employees->total()
+    ]);
+}
+
+    public function birthdayEmployees()
+    {
+        $today = Carbon::now()->format('m-d');
+
+        $employees = Employee::whereRaw("DATE_FORMAT(date_of_birth, '%m-%d') = ?", [$today])->get();
+
+        return response()->json($employees);
+    }
+    public function getLeaveBalance($employeeId)
+    {
+        $employee = Employee::with('leaveBalance')->find($employeeId);
+
+        if (!$employee) {
+            return response()->json(['message' => 'Employee not found'], 404);
+        }
+
+        return response()->json($employee);
+    }
+
     public function totalEmployees()
     {
         $count = Employee::count();

@@ -1,4 +1,3 @@
-<!-- src/components/Sidebar.vue -->
 <template>
   <div
     class="sidebar d-flex flex-column p-3 shadow-sm"
@@ -62,6 +61,7 @@
 
 <script>
 import {
+  TeamOutlined,
   DashboardOutlined,
   CalendarOutlined,
   LogoutOutlined,
@@ -72,12 +72,13 @@ import {
   UserAddOutlined,
   LoginOutlined,
   PlusOutlined,
-  InfoCircleOutlined
+  InfoCircleOutlined,
 } from '@ant-design/icons-vue';
 
 export default {
   props: ["item"],
   components: {
+    TeamOutlined,
     DashboardOutlined,
     CalendarOutlined,
     LogoutOutlined,
@@ -103,7 +104,7 @@ export default {
   },
         { 
     name: 'Recruitment', 
-    icon: 'DashboardOutlined',
+    icon: 'UserAddOutlined',
     children: [
       { name: 'Admin Dashboard', route: '/admin-dashboard', icon: 'DashboardOutlined' },
       { name: 'Employee Dashboard', route: '/employee-dashboard', icon: 'DashboardOutlined' },
@@ -111,16 +112,16 @@ export default {
   },
         { name: 'Attendance', route: '/attendance', icon: 'CalendarOutlined' },
         { 
-    name: 'Leave Info', 
-    icon: 'InfoCircleOutlined',
+    name: 'Leaves', 
+    icon: 'CalendarOutlined',
     children: [
-      { name: 'Leave Info', route: '/leave', icon: 'InfoCircleOutlined' },
+      { name: 'Leave Info', route: '/leave-info', icon: 'InfoCircleOutlined' },
       { name: 'Leave Add', route: '/leave-add', icon: 'PlusOutlined' },
     ]
   },
         { 
     name: 'Employee', 
-    icon: 'InfoCircleOutlined',
+    icon: 'TeamOutlined',
     children: [
       { name: 'Employees', route: '/employees', icon: 'InfoCircleOutlined' },
       { name: 'Update Employee', route: '/employee-add', icon: 'PlusOutlined' },
