@@ -71,8 +71,8 @@ import {
   ClockCircleOutlined,
   UserAddOutlined,
   LoginOutlined,
- PlusOutlined,
- InfoCircleOutlined
+  PlusOutlined,
+  InfoCircleOutlined
 } from '@ant-design/icons-vue';
 
 export default {
@@ -95,6 +95,14 @@ export default {
       navItems: [
         { 
     name: 'Dashboard', 
+    icon: 'DashboardOutlined',
+    children: [
+      { name: 'Admin Dashboard', route: '/admin-dashboard', icon: 'DashboardOutlined' },
+      { name: 'Employee Dashboard', route: '/employee-dashboard', icon: 'DashboardOutlined' },
+    ]
+  },
+        { 
+    name: 'Recruitment', 
     icon: 'DashboardOutlined',
     children: [
       { name: 'Admin Dashboard', route: '/admin-dashboard', icon: 'DashboardOutlined' },

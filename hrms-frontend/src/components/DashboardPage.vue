@@ -12,8 +12,6 @@
         </div>
       </div>
     </div>
-
-    <!-- New Joinees -->
     <div class="col-md-5" style="width:20%">
       <div class="card text-white bg-info mb-3 zoom-card">
         <div class="card-header">New Joinees Dashboard</div>
@@ -35,26 +33,31 @@
       </div>
     </div>
     <div class="col-md-5" style="width:20%">
-      <div class="card text-white bg-info mb-3 zoom-card">
-        <div class="card-header">Leave Approval Dashboard</div>
-        <div class="card-body">
-          <div class="d-flex justify-content-between align-items-center">
-            <p class="card-title m-0">
-              Approved
-              <CheckCircleFilled style="color: green;" />
-              <span class="ms-2">{{ approvedLeaves }}</span>
-            </p>
-            <p class="card-title m-0">
-              Rejected
-              <CloseOutlined style="color: red;" />
-              <span class="ms-2">{{ rejectLeaves }}</span>
-            </p>
-          </div>
-          <button class="btn btn-primary mt-4"><EyeOutlined/> View</button>
-        </div>
-
+  
+    
+    <div class="card-body" style="background-color:red;width:500px">
+      <div v-if="birthdays.length > 0">
+        <h5 class="fw-bolder text-center mt-3 text-light">Reminder of Birthday</h5>
+        <p class="fw-bolder text-center mt-3 text-light"
+          v-for="(person, index) in birthdays" 
+          :key="index"
+        >
+          Happy Bithday 🎂 {{ person.first_name }} {{ person.last_name }}
+        </p>
+        <p class="fw-bolder text-center mt-3 text-light"
+          v-for="(person, index) in birthdays" 
+          :key="index"
+        >
+           {{formatDate(person.date_of_birth)}}
+        </p>
+      </div>
+      <div v-else>
+        <p class="fw-bolder text-center mt-3 text-light">No birthdays today 🎉</p>
       </div>
     </div>
+</div>
+
+
   </div>
   <h4 class="text-center" style="color:#0077B6;font-weight:600">Add Holidays</h4>
   <div class="d-flex justify-content-center mt-4">
@@ -161,6 +164,7 @@
 </div>
 
 
+
 </div>
 </template>
 
@@ -168,8 +172,6 @@
 import axios from 'axios';
 import api from '../api';
 import {
-  CheckCircleFilled,
-  CloseOutlined,
   EyeOutlined,
   CalendarOutlined,
   EditOutlined,
@@ -180,8 +182,6 @@ import {
 export default {
   name: 'DashboardPage',
   components: {
-    CheckCircleFilled,
-    CloseOutlined,
     EyeOutlined,
     CalendarOutlined,
     EditOutlined,
@@ -191,11 +191,12 @@ export default {
   },
   data() {
     return {
+      birthdays:{},
       newHoliday: {
-  title: '',
-  holiday_date: '',
-  description: '',
-  type: 'Public' // Default value
+      title: '',
+      holiday_date: '',
+      description: '',
+      type: 'Public',
 },
       totalEmployees: 0,
       newJoinees: '',
@@ -209,7 +210,7 @@ export default {
       title: '',
       holiday_date: '',
       description: '',
-      holidayData:[]
+      holidayData:[],
       }
     };
   },
@@ -220,8 +221,21 @@ export default {
     this.approvesLeaves();
     this.rejectedLeaves();
     this.fetchHolidays();
+    this.getTodayBirthdays();
   },
   methods: {
+     formatDate(date) {
+      const options = { day: "2-digit", month: "short", year: "numeric" };
+      return new Date(date).toLocaleDateString("en-GB", options);
+    },
+  async getTodayBirthdays() {
+  try {
+    const response = await api.get("/birthday-announcement");
+    this.birthdays = response.data;
+  } catch (error) {
+    console.error("Error fetching birthdays:", error);
+  }
+},
     async addHoliday() {
   try {
     await api.post('/add-holiday', this.newHoliday);

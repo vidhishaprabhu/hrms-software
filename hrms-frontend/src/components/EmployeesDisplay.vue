@@ -23,9 +23,6 @@
     </button>
   </router-link>
 </div>
-
-
-
   <div class="row justify-content-center pb-5" style="margin-left:300px;">
     <div v-for="employee in filteredEmployees" :key="employee.employee_id" class="col-md-4 mb-3">
       <div class="card h-100 shadow-sm">
@@ -55,7 +52,16 @@
         </div>
       </div>
     </div>
-</div>
+    <div class="d-flex justify-content-center mt-3">
+    <button class="btn btn-secondary mx-2" :disabled="currentPage === 1" @click="getEmployees(currentPage - 1)">
+      Previous
+    </button>
+    <span> Page {{ currentPage }} of {{ totalPages }} </span>
+    <button class="btn btn-secondary mx-2" :disabled="currentPage === totalPages" @click="getEmployees(currentPage + 1)">
+      Next
+    </button>
+  </div>
+  </div>
 </template>
 
 <script>
@@ -68,7 +74,9 @@ export default{
   data(){
     return {
       employees:[],
-      searchQuery: ""
+      searchQuery: "", 
+      currentPage: 1,
+      totalPages: 1,
 
     }
   },
@@ -97,26 +105,33 @@ export default{
   },
   
   methods: {
-  async getEmployees() {
+  async getEmployees(page=1) {
     try {
-      const response = await api.get("/employees"); 
-      this.employees = response.data;
-    } catch (error) {
-      console.error("Error fetching employees:", error);
-    }
+        const response = await api.get("/filter", {
+          params: {
+            page: page,
+            search: this.searchQuery
+          }
+        });
+
+        this.employees = response.data.data;   // actual employee list
+        this.currentPage = response.data.current_page;
+        this.totalPages = response.data.last_page;
+      } catch (error) {
+        console.error("Error fetching employees:", error);
+      }
   },
   async deleteDetails(employee_id) {
     if (!confirm("Are you sure you want to delete this employee?")) return;
 
-    try {
-      await api.delete(`/delete-user/${employee_id}`);
-      alert("Employee details deleted successfully!");
-
-      this.employees = this.employees.filter(emp => emp.employee_id !== employee_id);
-    } catch (error) {
-      console.error("Error deleting employee details:", error);
-      alert("Failed to delete employee details");
-    }
+      try {
+        await api.delete(`/delete-user/${employee_id}`);
+        alert("Employee deleted successfully!");
+        this.getEmployees(this.currentPage); 
+      } catch (error) {
+        console.error("Error deleting employee:", error);
+        alert("Failed to delete employee");
+      }
   }
 }
 }
