@@ -13,31 +13,45 @@ class EmployeeController extends Controller
         $employees = Employee::all();
         return response()->json($employees);
     }
-    public function filterEmployee(Request $request)
-{
-    $query = Employee::with('leaveBalance'); 
 
-    if ($request->has('search') && !empty($request->search)) {
-        $search = $request->search;
-        $query->where(function($q) use ($search) {
+public function newJoineesThisWeek()
+{
+    $startOfWeek = Carbon::now()->startOfWeek();
+    $endOfWeek = Carbon::now()->endOfWeek();
+
+    $joinees = Employee::whereBetween('date_of_joining', [$startOfWeek, $endOfWeek])->get();
+
+    return response()->json([
+        'count' => $joinees->count(),
+        'employees' => $joinees
+    ]);
+}
+
+    public function filterEmployee(Request $request)
+    {
+        $query = Employee::with('leaveBalance'); 
+
+        if ($request->has('search') && !empty($request->search)) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
             $q->where('first_name', 'like', "%{$search}%")
               ->orWhere('last_name', 'like', "%{$search}%")
               ->orWhere('email', 'like', "%{$search}%")
               ->orWhere('department', 'like', "%{$search}%")
               ->orWhere('designation', 'like', "%{$search}%");
-        });
+            });
+        }
+
+        $employees = $query->paginate(3);
+
+        return response()->json([
+            'data' => $employees->items(),
+            'current_page' => $employees->currentPage(),
+            'last_page' => $employees->lastPage(),
+            'per_page' => $employees->perPage(),
+            'total' => $employees->total()
+        ]);
     }
-
-    $employees = $query->paginate(3);
-
-    return response()->json([
-        'data' => $employees->items(),
-        'current_page' => $employees->currentPage(),
-        'last_page' => $employees->lastPage(),
-        'per_page' => $employees->perPage(),
-        'total' => $employees->total()
-    ]);
-}
 
     public function birthdayEmployees()
     {
@@ -65,13 +79,21 @@ class EmployeeController extends Controller
             'total_employees' => $count
         ]);
     }
-    public function getNewJoineesThisMonth(){
-        $newJoinees = Employee::whereMonth('date_of_joining', now()->month)
-            ->whereYear('date_of_joining', now()->year)
-            ->count();
-            
+    // public function getNewJoineesThisMonth(){
+    //     $newJoinees = Employee::whereMonth('date_of_joining', now()->month)
+    //         ->whereYear('date_of_joining', now()->year)
+    //         ->count();            
+    //     return response()->json([
+    //         'count' => $newJoinees->count(),
+    //         'new_joinees' => $newJoinees
+    //     ]);
+    // }
+    public function getNewJoineesToday(){
+        $newJoinees = Employee::whereMonth('date_of_joining', now())
+            ->whereDate('date_of_joining', now()->toDateString());         
         return response()->json([
-            'new_joinees' => $newJoinees
+            'new_joinees' => $newJoinees,
+             'count'=>$newJoinees->count()
         ]);
     }
     public function getEmployees(Request $request){

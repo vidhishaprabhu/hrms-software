@@ -13,13 +13,14 @@
 
         <h2 class="fw-bold">{{ currentTime }}</h2>
 
-        <button
-  class="btn my-2 d-flex align-items-center justify-content-center mx-auto"
-  @click="showModal=true" style="background-color: #00B4D8; color: white;width:65%"
->
-  <i class="bi bi-fingerprint me-2"></i>
-  {{ isSignedIn ? 'Check Out' : 'Check In' }}
+        <button v-if="!isSignedIn" @click="checkIn" class="btn btn-success">
+  Sign In
 </button>
+
+<button v-else @click="signOut" class="btn btn-danger">
+  Sign Out
+</button>
+
 
         <div class="modal fade" :class="{ show: showModal }" style="display: block;" v-if="showModal">
           <div class="modal-dialog modal-dialog-centered">
@@ -307,10 +308,17 @@ export default {
   const storedStatus = localStorage.getItem("isSignedIn");
   this.isSignedIn = storedStatus === "true";
 
-  if (this.userData.id) {
+  // In your mounted() method
+if (this.userData?.id) {
+    // Restore sign-in status for this user using a unique key
+    const storedStatus = localStorage.getItem(`isSignedIn_${this.userData.id}`);
+    this.isSignedIn = storedStatus === "true";
+
+    // Restore check-in / sign-out times
     this.checkin = localStorage.getItem(`checkInTime_${this.userData.id}`) || null;
     this.signOutTime = localStorage.getItem(`checkOutTime_${this.userData.id}`) || null;
-  }
+}
+
   await this.checkSignInStatus();
   this.getLeaveCounts();
   this.fetchLeaveBalance();
@@ -323,12 +331,12 @@ export default {
   beforeUnmount() {
   clearInterval(this.timer); // prevent memory leaks
 },
-  created() {
-    this.signedIn = localStorage.getItem('signedIn') === 'true';
-    this.checkInTime = localStorage.getItem('checkInTime');
-    this.attendanceId = localStorage.getItem('attendanceId');
-    this.employeeId = localStorage.getItem('employeeId');
-  },
+  // created() {
+  //   this.signedIn = localStorage.getItem('signedIn') === 'true';
+  //   this.checkInTime = localStorage.getItem('checkInTime');
+  //   this.attendanceId = localStorage.getItem('attendanceId');
+  //   this.employeeId = localStorage.getItem('employeeId');
+  // },
   methods: {
     async getLeaveCounts() {
       try {
@@ -393,7 +401,7 @@ async checkIn() {
     this.showModal = false;
 
     // Save to localStorage using a key unique to user
-    localStorage.setItem(`checkInTime_${this.userData.id}`, this.checkin);
+    // localStorage.setItem(`checkInTime_${this.userData.id}`, this.checkin);
     localStorage.setItem("isSignedIn", "true");
 
   } catch (err) {
@@ -512,14 +520,22 @@ async checkIn() {
     this.isSignedIn = false;
     this.showModal = false;
 
-    localStorage.setItem(`checkOutTime_${this.userData.id}`, this.signOutTime);
-    localStorage.setItem("isSignedIn", "false");
+    localStorage.setItem(`isSignedIn_${this.userData.id}`, "false");
     this.attendanceStatus = response.data.status;
 
     alert(`Sign out successful. Status: ${this.attendanceStatus}, Total Hours: ${response.data.total_working_time}`);
+
   } catch (error) {
     console.error('Sign out failed:', error.response?.data || error.message);
-    alert(error.response?.data?.message || 'Sign out failed. Please try again.');
+
+    // This is the key change to handle the "no active sign-in" case
+    if (error.response?.status === 404 && error.response?.data?.message === 'No active sign-in found') {
+      alert("No active sign-in found on the server. Updating status.");
+      this.isSignedIn = false; // Force the UI to update to "Sign In"
+      localStorage.setItem(`isSignedIn_${this.userData.id}`, "false"); // Sync localStorage
+    } else {
+      alert(error.response?.data?.message || 'Sign out failed. Please try again.');
+    }
   }
 },
     async fetchEmployeeData() {
@@ -663,7 +679,6 @@ async checkIn() {
 .calendar-table td {
   padding: 6px;
 }
-
 .calendar-table span {
   display: inline-block;
   width: 24px;
@@ -671,7 +686,6 @@ async checkIn() {
   line-height: 24px;
   border-radius: 50%;
 }
-
 .calendar-table .today {
   background: #0077B6;
   color: white;

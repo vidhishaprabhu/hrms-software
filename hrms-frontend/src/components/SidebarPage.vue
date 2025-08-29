@@ -98,34 +98,39 @@ export default {
     name: 'Dashboard', 
     icon: 'DashboardOutlined',
     children: [
-      { name: 'Admin Dashboard', route: '/admin-dashboard', icon: 'DashboardOutlined' },
-      { name: 'Employee Dashboard', route: '/employee-dashboard', icon: 'DashboardOutlined' },
+      { name: 'Admin Dashboard', route: '/admin-dashboard'},
+      { name: 'Employee Dashboard', route: '/employee-dashboard' },
     ]
   },
         { 
     name: 'Recruitment', 
     icon: 'UserAddOutlined',
     children: [
-      { name: 'Admin Dashboard', route: '/admin-dashboard', icon: 'DashboardOutlined' },
-      { name: 'Employee Dashboard', route: '/employee-dashboard', icon: 'DashboardOutlined' },
+      { name: 'Admin Dashboard', route: '/admin-dashboard'},
+      { name: 'Employee Dashboard', route: '/employee-dashboard'},
     ]
   },
-        { name: 'Attendance', route: '/attendance', icon: 'CalendarOutlined' },
+        { name: 'Attendance',icon: 'CalendarOutlined' ,
+    children: [
+      { name: 'Dashboard', route: '/attendance-dashboard'},
+      { name: 'Attendances', route: '/employee-dashboard'},
+    ]},
         { 
     name: 'Leaves', 
     icon: 'CalendarOutlined',
     children: [
-      { name: 'Leave Info', route: '/leave-info', icon: 'InfoCircleOutlined' },
-      { name: 'Leave Add', route: '/leave-add', icon: 'PlusOutlined' },
+      { name: 'Leave Info', route: '/leave-info'},
+      { name: 'Leave Add', route: '/leave-add'},
     ]
   },
         { 
     name: 'Employee', 
     icon: 'TeamOutlined',
     children: [
-      { name: 'Employees', route: '/employees', icon: 'InfoCircleOutlined' },
-      { name: 'Update Employee', route: '/employee-add', icon: 'PlusOutlined' },
-      { name: 'Employee Details', route: '/employee-info', icon: 'InfoCircleOutlined' },
+      { name: 'Profile', route: '/employee-profile'},
+      { name: 'Employees', route: '/employees' },
+      { name: 'Update Employee', route: '/employee-add'},
+      { name: 'Employee Details', route: '/employee-info'},
     ]
   },
         { name: 'Approval', route: '/approval', icon: 'CheckCircleOutlined' },

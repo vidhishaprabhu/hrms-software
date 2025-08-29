@@ -14,15 +14,15 @@
       <div class="card text-white bg-info mb-3 zoom-card">
         <div class="card-header">New Joining Today</div>
         <div class="card-body">
-          <p class="card-text fs-3">{{ newJoinees }}</p>
+          <p class="card-text fs-3">{{countToday}}</p>
         </div>
       </div>
     </div>
     <div class="col-md-5" style="width:20%">
       <div class="card text-white bg-info mb-3 zoom-card">
-        <div class="card-header">New Joining this week</div>
+        <div class="card-header">New joining this week</div>
         <div class="card-body">
-          <p class="card-text fs-3">{{ leaves }}</p>
+          <p class="card-text fs-3">{{joineeCount}}</p>
         </div>
       </div>
     </div>
@@ -183,6 +183,8 @@ export default {
   },
   data() {
     return {
+      joineeCount:0,
+      countToday:0,
       birthdays:{},
       newHoliday: {
       title: '',
@@ -214,12 +216,36 @@ export default {
     this.rejectedLeaves();
     this.fetchHolidays();
     this.getTodayBirthdays();
+    this.newjoineethisweek();
+    this.newjoineethisToday();
   },
   methods: {
+    async newjoineethisweek(){
+      try{
+        const response=await api.get('/new-joinees');
+        this.joineeCount=response.data.count;
+      }
+      catch(error){
+        console.error("Error in fetching new joinees this week data");
+      }
+    },
      formatDate(date) {
       const options = { day: "2-digit", month: "short", year: "numeric" };
       return new Date(date).toLocaleDateString("en-GB", options);
     },
+    async newjoineethisToday(){
+      try{
+        const response=await api.get('/new-joinees-today');
+        this.countToday=response.data.count;
+      }
+      catch(error){
+        console.error("Error in fetching new joinees this week data");
+      }
+    },
+    //  formatDate(date) {
+    //   const options = { day: "2-digit", month: "short", year: "numeric" };
+    //   return new Date(date).toLocaleDateString("en-GB", options);
+    // },
   async getTodayBirthdays() {
   try {
     const response = await api.get("/birthday-announcement");

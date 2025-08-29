@@ -12,6 +12,7 @@ import EmployeeAdd from '../components/AddEmployee.vue';
 import ChangePassword from '../components/ChangePassword.vue';
 import EmployeesDisplay from '../components/EmployeesDisplay.vue';
 import LeaveInfo from '../components/LeaveInfo.vue';
+import AttendanceDashboard from '../components/AttendanceDashboard.vue';
 const routes = [
   { path: '/register', name: 'RegisterPage', component: RegisterPage },
   { path: '/admin-dashboard', name: 'DashboardPage', component: DashboardPage,meta: { requiresAuth: true, role: 'admin' } },
@@ -60,6 +61,12 @@ const routes = [
     path:'/leave-info',
     name: 'LeaveInfo',
     component:LeaveInfo,
+    meta: { requiresAuth: true,role:'admin'}
+  },
+  {
+    path:'/attendance-dashboard',
+    name: 'AttendanceDashboard',
+    component:AttendanceDashboard,
     meta: { requiresAuth: true,role:'admin'}
   },
 ]

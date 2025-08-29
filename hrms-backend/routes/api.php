@@ -42,7 +42,8 @@ Route::delete('/holiday/{id}', [HolidayController::class, 'destroy']);
 Route::get('/employees', [EmployeeController::class, 'index']);
 Route::post('/add-holiday', [HolidayController::class, 'store']);
 Route::post('/leaves', [LeaveBalanceController::class, 'store']);
-
+Route::get('/new-joinees', [EmployeeController::class, 'newJoineesThisWeek']);
+Route::get('/new-joinees-today', [EmployeeController::class, 'getNewJoineesToday']);
 
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/user', [AuthController::class, 'user']);
@@ -61,4 +62,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::put('/change-password/{id}', [UserController::class, 'changePassword']);
     Route::get('/get-user-data',[UserController::class,'getUserData']);
     Route::delete('/delete-user/{id}',[EmployeeController::class,'destroy']);
+    Route::get('/filter',[EmployeeController::class,'filterEmployee']);
+    Route::get('/birthday-announcement', [EmployeeController::class, 'birthdayEmployees']);
+    Route::get('/get-leave-balance/{employeeId}', [EmployeeController::class, 'getLeaveBalance']);
+
+
 });
