@@ -44,6 +44,7 @@ Route::post('/add-holiday', [HolidayController::class, 'store']);
 Route::post('/leaves', [LeaveBalanceController::class, 'store']);
 Route::get('/new-joinees', [EmployeeController::class, 'newJoineesThisWeek']);
 Route::get('/new-joinees-today', [EmployeeController::class, 'getNewJoineesToday']);
+Route::get('/attendance-percentage', [EmployeeController::class, 'getTodayAttendancePercentage']);
 
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/user', [AuthController::class, 'user']);

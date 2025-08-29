@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Carbon\Carbon;
 use App\Models\Employee;
+use App\Models\Attendance;
 use Illuminate\Http\Request;
 
 class EmployeeController extends Controller
@@ -88,6 +89,25 @@ public function newJoineesThisWeek()
     //         'new_joinees' => $newJoinees
     //     ]);
     // }
+   public function getTodayAttendancePercentage()
+{
+    $totalEmployees = Employee::count();
+
+    $presentCount = Attendance::whereDate('attendance_date', now())->count();
+
+    $percentage = $totalEmployees > 0
+        ? round(($presentCount / $totalEmployees) * 100, 2)
+        : 0;
+
+    return response()->json([
+        'total_employees' => $totalEmployees,
+        'present_today' => $presentCount,
+        'absent_today' => $totalEmployees - $presentCount,
+        'attendance_percentage' => $percentage
+    ]);
+}
+
+
     public function getNewJoineesToday(){
         $newJoinees = Employee::whereMonth('date_of_joining', now())
             ->whereDate('date_of_joining', now()->toDateString());         
