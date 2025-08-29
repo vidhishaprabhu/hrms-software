@@ -45,6 +45,8 @@ Route::post('/leaves', [LeaveBalanceController::class, 'store']);
 Route::get('/new-joinees', [EmployeeController::class, 'newJoineesThisWeek']);
 Route::get('/new-joinees-today', [EmployeeController::class, 'getNewJoineesToday']);
 Route::get('/attendance-percentage', [EmployeeController::class, 'getTodayAttendancePercentage']);
+Route::get('/get-attendance-report',[AttendanceController::class,'getAttendanceReport']);
+Route::get('/get-attendance-report-monthly',[AttendanceController::class,'getAttendanceReportMonthly']);
 
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/user', [AuthController::class, 'user']);

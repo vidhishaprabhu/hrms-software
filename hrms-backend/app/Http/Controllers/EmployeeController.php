@@ -72,6 +72,7 @@ public function newJoineesThisWeek()
 
         return response()->json($employee);
     }
+   
 
     public function totalEmployees()
     {
@@ -90,22 +91,22 @@ public function newJoineesThisWeek()
     //     ]);
     // }
    public function getTodayAttendancePercentage()
-{
-    $totalEmployees = Employee::count();
+   {
+        $totalEmployees = Employee::count();
 
-    $presentCount = Attendance::whereDate('attendance_date', now())->count();
+        $presentCount = Attendance::whereDate('attendance_date', now())->count();
 
-    $percentage = $totalEmployees > 0
+        $percentage = $totalEmployees > 0
         ? round(($presentCount / $totalEmployees) * 100, 2)
         : 0;
 
-    return response()->json([
+        return response()->json([
         'total_employees' => $totalEmployees,
         'present_today' => $presentCount,
         'absent_today' => $totalEmployees - $presentCount,
         'attendance_percentage' => $percentage
-    ]);
-}
+        ]);
+    }
 
 
     public function getNewJoineesToday(){

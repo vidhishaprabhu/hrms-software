@@ -13,6 +13,8 @@ import ChangePassword from '../components/ChangePassword.vue';
 import EmployeesDisplay from '../components/EmployeesDisplay.vue';
 import LeaveInfo from '../components/LeaveInfo.vue';
 import AttendanceDashboard from '../components/AttendanceDashboard.vue';
+import GetReport from '../components/GetReport.vue';
+
 const routes = [
   { path: '/register', name: 'RegisterPage', component: RegisterPage },
   { path: '/admin-dashboard', name: 'DashboardPage', component: DashboardPage,meta: { requiresAuth: true, role: 'admin' } },
@@ -67,7 +69,13 @@ const routes = [
     path:'/attendance-dashboard',
     name: 'AttendanceDashboard',
     component:AttendanceDashboard,
-    meta: { requiresAuth: true,role:'admin'}
+    meta: { requiresAuth: true, role:'admin'}
+  },  
+  {
+    path:'/get-report',
+    name: 'GetReport',
+    component:GetReport,
+    meta: { requiresAuth: true, role:'admin'}
   },
 ]
 
@@ -79,11 +87,11 @@ router.beforeEach((to, from, next) => {
   const token = localStorage.getItem('api-token');
   const userRole = localStorage.getItem('user-role');
 
-  console.log("User Role:", userRole, "Route Role:", to.meta.role); // debug
+  console.log("User Role:", userRole, "Route Role:", to.meta.role);
 
   if (to.meta.requiresAuth) {
     if (!token) {
-      next('/'); // go to login if no token
+      next('/'); 
     } else {
       if (to.meta.role && userRole && to.meta.role.toLowerCase() !== userRole.toLowerCase()) {
         alert('Access Denied: Unauthorized Role');
