@@ -1,6 +1,5 @@
 <template>
 <div id="app">
-  <!-- Top Navbar -->
   <nav class="navbar navbar-expand-lg navbar-dark" style="background: linear-gradient(to bottom right, #0077B6, #00B4D8); height: 60px;">
   <div class="container-fluid d-flex justify-content-between align-items-center px-4">
     <div class="d-flex flex-column align-items-center text-center">
@@ -8,7 +7,34 @@
       <p style="color:white; font-family:cursive; margin:0;font-size:6px">Manage Your Resource Better</p>
     </div>
 
-    <BellOutlined style="color:white; font-size: 20px;padding-left:15%;padding-right:3%" v-if="showNavbarContent" />
+   <div style="position: relative; display: inline-block;">
+    <a-badge :count="notifications.length" offset="[0, 5]">
+      <BellOutlined
+        style="color: white; font-size: 22px; cursor: pointer;"
+        @click="togglePopup" v-if="showSidebar"
+      />
+    </a-badge>
+
+    <div
+      v-if="showPopup"
+      class="notification-popup shadow rounded"
+    >
+      <div v-if="notifications.length > 0">
+        <div
+          v-for="(note, index) in notifications"
+          :key="index"
+          class="notification-item"
+        >
+          {{ note }}
+        </div>
+      </div>
+      <div v-else class="text-center text-muted p-3">
+        <h5 style="font-weight:600">Notifications</h5>
+        <p class="mb-0">😊 All caught up!</p>
+        <small>You have no notifications at this moment</small>
+      </div>
+    </div>
+  </div>
     <div class="text-white" v-if="showNavbarContent">Month: {{ currentMonthYear }}</div>
     <template v-if="showNavbarContent">
       <div class="d-flex justify-content-between align-items-center">
@@ -93,6 +119,8 @@ export default {
   },
   data() {
     return {
+      showPopup: false,
+      notifications: [],
       currentMonthYear: new Date().toLocaleString('default', {
         month: 'short',
         year: 'numeric'
@@ -113,6 +141,9 @@ export default {
     this.getUser();
   },
   methods: {
+    togglePopup() {
+      this.showPopup = !this.showPopup;
+    },
     async logout() {
   try {
     const token = localStorage.getItem('api-token');
@@ -216,5 +247,25 @@ main {
   width: 16px;
   height: 16px;
 }
+.notification-popup {
+  position: absolute;
+  top: 30px;
+  right: 0;
+  width: 280px;
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 10px;
+  z-index: 1000;
+  max-height: 300px;
+  overflow-y: auto;
+}
 
+.notification-item {
+  padding: 10px;
+  border-bottom: 1px solid #f1f1f1;
+}
+
+.notification-item:last-child {
+  border-bottom: none;
+}
 </style>

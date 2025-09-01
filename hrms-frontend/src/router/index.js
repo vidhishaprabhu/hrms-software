@@ -14,6 +14,8 @@ import EmployeesDisplay from '../components/EmployeesDisplay.vue';
 import LeaveInfo from '../components/LeaveInfo.vue';
 import AttendanceDashboard from '../components/AttendanceDashboard.vue';
 import GetReport from '../components/GetReport.vue';
+import CreateJob from '../components/CreateJob.vue';
+import JobDescription from '../components/JobDescription.vue';
 
 const routes = [
   { path: '/register', name: 'RegisterPage', component: RegisterPage },
@@ -75,6 +77,18 @@ const routes = [
     path:'/get-report',
     name: 'GetReport',
     component:GetReport,
+    meta: { requiresAuth: true, role:'admin'}
+  },
+  {
+    path:'/create-job',
+    name: 'CreateJob',
+    component:CreateJob,
+    meta: { requiresAuth: true, role:'admin'}
+  },
+  {
+    path:'/job-description',
+    name: 'JobDescription',
+    component:JobDescription,
     meta: { requiresAuth: true, role:'admin'}
   },
 ]

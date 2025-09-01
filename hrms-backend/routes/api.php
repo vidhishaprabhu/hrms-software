@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\JobController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\LeaveController;
@@ -68,6 +69,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/filter',[EmployeeController::class,'filterEmployee']);
     Route::get('/birthday-announcement', [EmployeeController::class, 'birthdayEmployees']);
     Route::get('/get-leave-balance/{employeeId}', [EmployeeController::class, 'getLeaveBalance']);
+    Route::get('/jobs', [JobController::class, 'index']);
+    Route::post('/jobs', [JobController::class, 'store']);
 
 
 });

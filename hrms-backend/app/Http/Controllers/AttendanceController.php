@@ -20,6 +20,22 @@ class AttendanceController extends Controller
 
         return response()->json($checkIn);
     }
+    public function getWeeklyNewJoins()
+    {
+        $data = collect(range(0, 6))->map(function ($day) {
+        $date = \Carbon\Carbon::now()->subDays($day)->toDateString();
+
+        $count = Employee::whereDate('joining_date', $date)->count();
+
+        return [
+            'date' => $date,
+            'count' => $count
+        ];
+        })->reverse()->values();
+
+        return response()->json($data);
+    }
+
     public function getAttendanceReport()
     {
         $totalEmployees = Employee::count(); 
