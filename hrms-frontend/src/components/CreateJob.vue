@@ -6,7 +6,7 @@
     <form @submit.prevent="createJob">
       <!-- Job Title -->
       <div class="mb-3">
-        <label class="form-label fw-bold">Job Title</label>
+        <label class="form-label fw-bold">Job Title</label><span style="color:red"> *</span>
         <input 
           v-model="form.title" 
           type="text" 
@@ -18,7 +18,7 @@
 
       <!-- Department -->
       <div class="mb-3">
-        <label class="form-label fw-bold">Department</label>
+        <label class="form-label fw-bold">Department</label><span style="color:red"> *</span>
         <input 
           v-model="form.department" 
           type="text" 
@@ -30,7 +30,7 @@
 
       <!-- Responsibilities -->
       <div class="mb-3">
-        <label class="form-label fw-bold">Responsibilities</label>
+        <label class="form-label fw-bold">Responsibilities</label><span style="color:red"> *</span>
         <textarea 
           v-model="form.responsibilities" 
           class="form-control" 
@@ -41,7 +41,7 @@
 
       <!-- Qualifications -->
       <div class="mb-3">
-        <label class="form-label fw-bold">Qualifications</label>
+        <label class="form-label fw-bold">Qualifications</label><span style="color:red"> *</span>
         <textarea 
           v-model="form.qualifications" 
           class="form-control" 

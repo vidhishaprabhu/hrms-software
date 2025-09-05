@@ -71,6 +71,10 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/get-leave-balance/{employeeId}', [EmployeeController::class, 'getLeaveBalance']);
     Route::get('/jobs', [JobController::class, 'index']);
     Route::post('/jobs', [JobController::class, 'store']);
-
+    Route::get('/jobs', [JobController::class, 'index']);
+    Route::get('/jobs/{id}', [JobController::class, 'show']);
+    Route::put('/jobs/{id}', [JobController::class, 'update']);
+    Route::get('/get-new-joinee-month', [AttendanceController::class, 'getNewJoineesReportMonthly']);
+    Route::get('/get-new-joinee-weekly', [AttendanceController::class, 'getNewJoineesReportWeekly']);
 
 });

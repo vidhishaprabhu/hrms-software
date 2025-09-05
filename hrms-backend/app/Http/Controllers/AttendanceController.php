@@ -84,6 +84,36 @@ class AttendanceController extends Controller
 
         return response()->json($data);
     }
+    public function getNewJoineesReportMonthly()
+    {
+        $data = collect(range(0, 29))->map(function ($day) {
+        $date = Carbon::now()->subDays($day)->toDateString();
+
+        $newJoinees = Employee::whereDate('date_of_joining', $date)->count();
+
+        return [
+            'date' => $date,
+            'new_joinees' => $newJoinees
+        ];
+        })->reverse()->values();
+
+        return response()->json($data);
+    }
+    public function getNewJoineesReportWeekly()
+    {
+        $data = collect(range(0, 6))->map(function ($day) {
+        $date = Carbon::now()->subDays($day)->toDateString();
+
+        $newJoinees = Employee::whereDate('date_of_joining', $date)->count();
+
+        return [
+            'date' => $date,
+            'new_joinees' => $newJoinees
+        ];
+        })->reverse()->values();
+
+        return response()->json($data);
+    }
     public function destroy($id){
         $attendance = Attendance::findOrFail($id);
         $attendance->delete();

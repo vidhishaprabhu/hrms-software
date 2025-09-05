@@ -106,8 +106,8 @@ export default {
     name: 'Recruitment', 
     icon: 'UserAddOutlined',
     children: [
-      { name: 'Create Job', route: '/create-job'},
-      // { name: 'Employee Dashboard', route: '/employee-dashboard'},
+      { name: 'Create Job Description', route: '/create-job'},
+      { name: 'Job Description View', route: '/job-description'},
     ]
   },
         { name: 'Attendance',icon: 'CalendarOutlined' ,
@@ -135,8 +135,8 @@ export default {
   },
         { name: 'Approval', route: '/approval', icon: 'CheckCircleOutlined' ,},
         { name: 'Reports', icon: 'BarChartOutlined',children: [
-        { name: 'Attendance Report', route: '/get-report'},
-        { name: 'New Joining Report', route: '/employees' },
+        { name: 'Attendance Analytics', route: '/get-report'},
+        { name: 'New Joinees Analytics', route: '/new-joinee-report' },
     ] },
         { name: 'Payroll', route: '/payroll', icon: 'DollarOutlined' },
         { name: 'Shift Setup', route: '/shift-setup', icon: 'ClockCircleOutlined' },

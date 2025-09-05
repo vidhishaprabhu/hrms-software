@@ -7,7 +7,7 @@
       <div class="card p-4 shadow-sm rounded-4 h-100">
         <h5 class="mb-3 text-center">Attendance Report (Last Week)</h5>
         <div style="height: 300px;">
-          <LineChart v-if="chartData" :data="chartData" :options="chartOptions" />
+          <BarChart v-if="chartData" :data="chartData" :options="chartOptions" />
         </div>
       </div>
     </div>
@@ -17,7 +17,7 @@
       <div class="card p-4 shadow-sm rounded-4 h-100">
         <h5 class="mb-3 text-center">Attendance Report (Last Month)</h5>
         <div style="height: 300px;">
-          <LineChart v-if="monthlyData" :data="monthlyData" :options="chartOptions" />
+          <BarChart v-if="monthlyData" :data="monthlyData" :options="chartOptions" />
         </div>
       </div>
     </div>
@@ -31,17 +31,17 @@
 
 
 <script>
-import { Line } from "vue-chartjs";
+import { Bar } from "vue-chartjs";
 import {
   Chart as ChartJS,
-  Title, Tooltip, Legend, LineElement, CategoryScale, LinearScale, PointElement
+  Title, Tooltip, Legend,
+  BarElement, CategoryScale, LinearScale
 } from "chart.js";
 import api from '../api';
 
-ChartJS.register(Title, Tooltip, Legend, LineElement, CategoryScale, LinearScale, PointElement);
-
+ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale);
 export default {
-  components: { LineChart: Line },
+  components: { BarChart: Bar },
   data() {
     return {
       chartData: null,
@@ -73,6 +73,7 @@ export default {
             {
               label: "Attendance %",
               data: percentages,
+              backgroundColor: "rgba(255, 99, 132, 0.6)",
               borderColor: "#4CAF50",
               tension: 0.3
             }
@@ -87,6 +88,7 @@ export default {
           {
             label: "Attendance %",
             data: res.data.map(d => d.percentage),
+            backgroundColor: "rgba(255, 99, 132, 0.6)",
             borderColor: "#2196F3",
             tension: 0.3
           }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Job;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class JobController extends Controller
 {
@@ -20,7 +21,7 @@ class JobController extends Controller
             'qualifications'   => 'nullable|string',
             'user_id'          => 'nullable|exists:users,id',
         ]);
-        
+
         $validated['user_id'] = auth()->id(); 
         $job = Job::create($validated);
 
@@ -29,4 +30,23 @@ class JobController extends Controller
             'job' => $job,
         ], 201);
     }
+    public function download($id)
+    {
+        $job = Job::with('user')->findOrFail($id);
+        $pdf = Pdf::loadView('pdf.job', compact('job')); 
+        return $pdf->download("job_description_{$job->id}.pdf");
+    }
+    public function show($id)
+    {
+        return Job::findOrFail($id);
+    }
+    public function update(Request $request, $id)
+    {
+        $job = Job::findOrFail($id);
+        $job->update($request->all());
+
+        return response()->json(['message' => 'Job Description updated successfully']);
+    }
+    
+
 }
