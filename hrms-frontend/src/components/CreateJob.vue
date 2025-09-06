@@ -1,7 +1,7 @@
 <template>
   <div class="d-flex justify-content-center align-items-center vh-100 bg-light">
   <div class="card shadow-lg p-4" style="width: 450px; border-radius: 12px;">
-    <h2 class="text-center mb-4">Create Job</h2>
+    <h2 class="text-center mb-4">Create Job Description</h2>
     
     <form @submit.prevent="createJob">
       <!-- Job Title -->

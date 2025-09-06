@@ -14,7 +14,7 @@
       aria-describedby="search-addon"
     />
   </div>
-  <button class="btn mx-3">Export</button>
+  <button class="btn mx-3" @click="exportToExcel"><i class="fas fa-file-excel"></i> Export to Excel</button>
 
   <!-- Create button -->
   <router-link to="/register">
@@ -66,6 +66,8 @@
 
 <script>
 import api from '../api';
+import * as XLSX from "xlsx";
+import { saveAs } from "file-saver";
 import {
   PlusOutlined
 } from '@ant-design/icons-vue';
@@ -105,6 +107,7 @@ export default{
   },
   
   methods: {
+    
   async getEmployees(page=1) {
     try {
         const response = await api.get("/filter", {
@@ -132,7 +135,34 @@ export default{
         console.error("Error deleting employee:", error);
         alert("Failed to delete employee");
       }
-  }
+  },
+  exportToExcel() {
+      // Prepare employee data
+      const exportData = this.filteredEmployees.map(emp => ({
+        "Employee ID": emp.employee_id,
+        "First Name": emp.first_name,
+        "Last Name": emp.last_name,
+        "Email": emp.email,
+        "Designation": emp.designation || "-",
+        "Department": emp.department || "-",
+        "Date of Joining": emp.date_of_joining || "-",
+        "Gender": emp.gender || "-",
+        "Blood Group": emp.blood_group || "-"
+      }));
+
+      // Create worksheet
+      const worksheet = XLSX.utils.json_to_sheet(exportData);
+
+      // Create workbook and append worksheet
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, "Employees");
+
+      // Export to Excel file
+      const excelBuffer = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
+      const data = new Blob([excelBuffer], { type: "application/octet-stream" });
+      saveAs(data, "EmployeeData.xlsx");
+    }
+
 }
 }
 </script>

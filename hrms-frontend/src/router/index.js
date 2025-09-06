@@ -17,7 +17,7 @@ import GetReport from '../components/GetReport.vue';
 import CreateJob from '../components/CreateJob.vue';
 import JobDescription from '../components/JobDescription.vue';
 import NewJoineeReport from '../components/NewJoineeReport.vue';
-
+import SalaryForm from '../components/SalaryForm.vue';
 const routes = [
   { path: '/register', name: 'RegisterPage', component: RegisterPage },
   { path: '/admin-dashboard', name: 'DashboardPage', component: DashboardPage,meta: { requiresAuth: true, role: 'admin' } },
@@ -98,6 +98,13 @@ const routes = [
     name: 'NewJoineeReport',
     component:NewJoineeReport,
     meta: { requiresAuth: true, role:'admin'},
+  },
+  {
+    path:'/update-salary',
+    name: 'SalaryForm',
+    component:SalaryForm,
+    meta: { requiresAuth: true, role:'admin'},
+    props: true
   },
 ]
 

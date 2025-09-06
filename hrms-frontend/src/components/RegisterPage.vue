@@ -81,15 +81,8 @@ export default {
           password: this.password,
           role: this.role,
         });
-        // const role = response.data.role;
-        // localStorage.setItem('user-role', role);
-
         this.error = '';
         this.message = 'Registration was Successfully done !!';
-
-        setTimeout(() => {
-          this.$router.push('/');
-        }, 1000);
 
       } catch (error) {
         if (error.response && error.response.status === 422) {
@@ -114,14 +107,13 @@ export default {
 
 <style scoped>
 .register-page {
-  background-image: url('@/assets/hrms-back.png'); /* Place your image in src/assets */
+  background-image: url('@/assets/hrms-back.png'); 
   background-size: cover;
   background-position: center;
   min-height: 100vh;
 }
 
 .overlay {
-  /* background-color: rgba(255, 255, 255, 0.85); light overlay for readability */
   min-height: 60vh;
   display: flex;
   justify-content: center;

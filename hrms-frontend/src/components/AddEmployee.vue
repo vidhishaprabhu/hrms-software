@@ -109,10 +109,10 @@
         <input type="date" class="form-control" v-model="form.confirmation_date" />
       </div>
 
-      <div class="mb-3">
+      <!-- <div class="mb-3">
         <label class="form-label">Employee Type</label>
         <input type="text" class="form-control" v-model="form.employee_type" placeholder="Enter employee type" />
-      </div>
+      </div> -->
 
       <div class="mb-3">
         <label class="form-label">Probation Period (days)</label>
@@ -154,7 +154,7 @@ export default{
       address: '',
       blood_group: '',
       confirmation_date: '',
-      employee_type: '',
+      // employee_type: '',
       probation_period_days: ''
       }
 

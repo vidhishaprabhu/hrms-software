@@ -76,5 +76,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::put('/jobs/{id}', [JobController::class, 'update']);
     Route::get('/get-new-joinee-month', [AttendanceController::class, 'getNewJoineesReportMonthly']);
     Route::get('/get-new-joinee-weekly', [AttendanceController::class, 'getNewJoineesReportWeekly']);
+    Route::put('/update-salary/{id}', [EmployeeController::class, 'updateSalary']);
 
 });

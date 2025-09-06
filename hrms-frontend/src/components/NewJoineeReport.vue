@@ -56,7 +56,7 @@ export default {
           y: {
             beginAtZero: true,
             max: 100,
-            // ticks: { callback: (val) => val + "%" }
+            ticks: { callback: (val) => val + "%" }
           }
         }
       }

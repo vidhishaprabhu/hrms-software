@@ -81,15 +81,6 @@ public function newJoineesThisWeek()
             'total_employees' => $count
         ]);
     }
-    // public function getNewJoineesThisMonth(){
-    //     $newJoinees = Employee::whereMonth('date_of_joining', now()->month)
-    //         ->whereYear('date_of_joining', now()->year)
-    //         ->count();            
-    //     return response()->json([
-    //         'count' => $newJoinees->count(),
-    //         'new_joinees' => $newJoinees
-    //     ]);
-    // }
    public function getTodayAttendancePercentage()
    {
         $totalEmployees = Employee::count();
@@ -107,7 +98,45 @@ public function newJoineesThisWeek()
         'attendance_percentage' => $percentage
         ]);
     }
+    public function updateSalary(Request $request, Employee $employee)
+    {
+        $request->validate([
+            'employee_id' => 'required|exists:employees,id',
+            'employee_type' => 'required|in:Permanent,Probation,Intern',
+            'salary' => 'nullable|numeric|min:0',
+            'hourly_rate' => 'nullable|numeric|min:0',
+            'bonus' => 'nullable|numeric|min:0'
+        ]);
 
+        try {
+            $employee = Employee::findOrFail($request->employee_id);
+            $employee->salary = null;
+            $employee->hourly_rate = null;
+            $employee->bonus = null;
+
+            $employee->employee_type = $request->employee_type;
+
+            if ($employee->employee_type === 'Permanent') {
+                $employee->salary = $request->salary;
+                $employee->bonus = $request->bonus;
+            } 
+            elseif ($employee->employee_type === 'Probation' || $employee->employee_type === 'Intern') {
+                $employee->hourly_rate = $request->hourly_rate;
+            }
+            $employee->save();
+
+            return response()->json([
+                'message' => 'Employee compensation updated successfully.',
+                'employee' => $employee
+            ], 200);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Failed to update employee compensation.',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
 
     public function getNewJoineesToday(){
         $newJoinees = Employee::whereMonth('date_of_joining', now())
@@ -146,7 +175,7 @@ public function newJoineesThisWeek()
             'state'=>$employee->state,
             'pin'=>$employee->pin,
             'confirmation_date'=>$employee->confirmation_date,
-            'employee_type'=>$employee->employee_type,
+            // 'employee_type'=>$employee->employee_type,
             'probation_period_days'=>$employee->probation_period_days
         ]);
     }
@@ -177,7 +206,7 @@ public function newJoineesThisWeek()
             'state'=>$request->state,
             'pin'=>$request->pin,
             'confirmation_date'=>$request->confirmation_date,
-            'employee_type'=>$request->employee_type,
+            // 'employee_type'=>$request->employee_type,
             'probation_period_days'=>$request->probation_period_days
         ]);
 

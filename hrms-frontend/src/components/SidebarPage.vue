@@ -138,7 +138,12 @@ export default {
         { name: 'Attendance Analytics', route: '/get-report'},
         { name: 'New Joinees Analytics', route: '/new-joinee-report' },
     ] },
-        { name: 'Payroll', route: '/payroll', icon: 'DollarOutlined' },
+        { name: 'Payroll', route: '/payroll', icon: 'DollarOutlined',
+          children: [
+      { name: 'Employee Compensation', route: '/update-salary'},
+     
+    ]
+         },
         { name: 'Shift Setup', route: '/shift-setup', icon: 'ClockCircleOutlined' },
         { name: 'Register', route: '/register', icon: 'UserAddOutlined', loggedIn: false },
         { name: 'Login', route: '/', icon: 'LoginOutlined', loggedIn: false },
