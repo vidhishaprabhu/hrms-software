@@ -1,62 +1,73 @@
 <template>
   <div
-    class="sidebar d-flex flex-column p-3 shadow-sm"
-    style="height: 100vh; width: 18%; background: linear-gradient(to bottom right, #0077B6, #00B4D8);"
-  >
-    <div class="text-center mb-4">
-      <img :src="require('@/assets/hrms-logo.png')" alt="Logo" style="width: 120px; height: auto;" />
-    </div>
-    <ul class="nav flex-column">
-      <a href=""><p class="text-white fw-bold">NAVIGATION</p></a>
+  class="sidebar d-flex flex-column p-3 shadow-sm"
+  :style="collapsed 
+    ? 'height:100vh; width:70px; background:linear-gradient(to bottom right, #0077B6, #00B4D8); transition: width 0.3s;'
+    : 'height:100vh; width:18%; background:linear-gradient(to bottom right, #0077B6, #00B4D8); transition: width 0.3s;'"
+  @mouseenter="collapsed = false"
+  @mouseleave="collapsed = true"
+>
+<div class="text-center mb-4">
+  <img 
+    :src="require('@/assets/hrms-logo.png')" 
+    alt="Logo"
+    class="sidebar-logo"
+    :style="collapsed ? 'width:40px; height:auto;' : 'width:120px; height:auto;'"
+  />
+</div>
+  <!-- Navigation -->
+  <ul class="nav flex-column">
+    <p v-if="!collapsed" class="text-white fw-bold">NAVIGATION</p>
 
-      <!-- Loop through parent items -->
-      <li class="nav-item mb-3" v-for="item in filteredNavItems" :key="item.name">
-        
-        <!-- If item has children -->
-        <div v-if="item.children" class="text-white">
-  <div 
-    class="d-flex align-items-center sidebar-link"
-    @click="toggleDropdown(item)"
-    style="cursor: pointer;"
-  >
-    <component :is="item.icon" class="me-2" />
-    <span>{{ item.name }}</span>
-    <i 
-      class="ms-auto"
-      :class="item.isOpen ? 'bi bi-chevron-down' : 'bi bi-chevron-right'"
-    ></i>
-  </div>
+    <li class="nav-item mb-3" v-for="item in filteredNavItems" :key="item.name">
+      
+      <!-- Item with children -->
+      <div v-if="item.children" class="text-white">
+        <div 
+          class="d-flex align-items-center sidebar-link"
+          @click="toggleDropdown(item)"
+          style="cursor: pointer;"
+        >
+          <component :is="item.icon" class="me-2" />
+          <span v-if="!collapsed">{{ item.name }}</span>
+          <i 
+            v-if="!collapsed"
+            class="ms-auto"
+            :class="item.isOpen ? 'bi bi-chevron-down' : 'bi bi-chevron-right'"
+          ></i>
+        </div>
 
-  <ul v-show="item.isOpen" class="nav flex-column ms-4 mt-2">
-    <li 
-      v-for="child in item.children" 
-      :key="child.name" 
-      class="nav-item mb-2"
-    >
-      <router-link 
-        :to="child.route" 
+        <ul v-show="item.isOpen && !collapsed" class="nav flex-column ms-4 mt-2">
+          <li 
+            v-for="child in item.children" 
+            :key="child.name" 
+            class="nav-item mb-2"
+          >
+            <router-link 
+              :to="child.route" 
+              class="nav-link text-white d-flex align-items-center sidebar-link"
+            >
+              <component :is="child.icon" class="me-3" />
+              <span v-if="!collapsed">{{ child.name }}</span>
+            </router-link>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Item without children -->
+      <router-link
+        v-else
+        :to="item.route"
         class="nav-link text-white d-flex align-items-center sidebar-link"
       >
-        <component :is="child.icon" class="me-3" />
-        {{ child.name }}
+        <component :is="item.icon" class="me-3" />
+        <span v-if="!collapsed">{{ item.name }}</span>
       </router-link>
     </li>
   </ul>
 </div>
 
-
-        <!-- If no children (normal item) -->
-        <router-link
-          v-else
-          :to="item.route"
-          class="nav-link text-white d-flex align-items-center sidebar-link"
-        >
-          <component :is="item.icon" class="me-4" />
-          {{ item.name }}
-        </router-link>
-      </li>
-    </ul>
-  </div>
+  
 </template>
 
 <script>
@@ -93,6 +104,7 @@ export default {
   },
   data() {
     return {
+      collapsed: false, 
       navItems: [
         { 
     name: 'Dashboard', 
@@ -182,6 +194,9 @@ export default {
   },
   methods: {
     // You might also need a method to handle the logout logic
+    toggleSidebar() {   // NEW
+      this.collapsed = !this.collapsed;
+    },
     logout() {
       localStorage.removeItem('api-token');
       localStorage.removeItem('user-role');
@@ -227,4 +242,18 @@ html {
   left: 0;
   z-index: 1000;
 }
+.sidebar-logo {
+  transition: width 0.3s ease;
+}
+.logo-small {
+  width: 40px;
+}
+.logo-large {
+  width: 120px;
+}
+
+
+
+
+
 </style>

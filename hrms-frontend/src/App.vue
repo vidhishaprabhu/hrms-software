@@ -3,8 +3,7 @@
   <nav class="navbar navbar-expand-lg navbar-dark" style="background: linear-gradient(to bottom right, #0077B6, #00B4D8); height: 60px;">
   <div class="container-fluid d-flex justify-content-between align-items-center px-4">
     <div class="d-flex flex-column align-items-center text-center">
-      <img :src="require('@/assets/hrms-logo.png')" alt="Logo" style="height: 40px; margin-bottom: 5px;" />
-      <p style="color:white; font-family:cursive; margin:0;font-size:6px">Manage Your Resource Better</p>
+
     </div>
 
    <div style="position: relative; display: inline-block;">
